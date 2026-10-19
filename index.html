@@ -1,0 +1,3274 @@
+<!DOCTYPE html>
+<html lang="es" class="dark scroll-smooth">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Marketing Hub 360 | Fundamentos de Marketing - UPDS</title>
+  <meta name="description"
+    content="Hub Interactivo de Estudio de Fundamentos de Marketing para universitarios. Micro-aprendizaje, Flashcards 3D, Simuladores CAC/LTV y MASDA, y Quizzes gamificados.">
+
+  <!-- Google Fonts: Outfit (Titulares) & Inter (Lectura) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap"
+    rel="stylesheet">
+
+  <!-- FontAwesome 6 Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+  <!-- Canvas Confetti CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+
+  <!-- TailwindCSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            display: ['Outfit', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          },
+          colors: {
+            brand: {
+              50: '#eef2ff',
+              100: '#e0e7ff',
+              400: '#818cf8',
+              500: '#6366f1',
+              600: '#4f46e5',
+              700: '#4338ca',
+            },
+            neon: {
+              cyan: '#06b6d4',
+              emerald: '#10b981',
+              amber: '#f59e0b',
+              purple: '#a855f7',
+              rose: '#f43f5e',
+            }
+          },
+          boxShadow: {
+            'glow-cyan': '0 0 25px -5px rgba(6, 182, 212, 0.4)',
+            'glow-indigo': '0 0 25px -5px rgba(99, 102, 241, 0.4)',
+            'glow-emerald': '0 0 25px -5px rgba(16, 185, 129, 0.4)',
+            'glow-purple': '0 0 25px -5px rgba(168, 85, 247, 0.4)',
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #090d16;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #1e293b;
+      border-radius: 9999px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: #334155;
+    }
+
+    /* 3D Flip Card Styles */
+    .perspective-1000 {
+      perspective: 1000px;
+    }
+
+    .transform-style-3d {
+      transform-style: preserve-3d;
+    }
+
+    .backface-hidden {
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+    }
+
+    .rotate-y-180 {
+      transform: rotateY(180deg);
+    }
+
+    .card-flipped .flipper {
+      transform: rotateY(180deg);
+    }
+
+    /* Glassmorphism gradient borders */
+    .glass-card {
+      background: rgba(15, 23, 42, 0.75);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(51, 65, 85, 0.6);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .glass-card:hover {
+      border-color: rgba(99, 102, 241, 0.5);
+      box-shadow: 0 10px 30px -10px rgba(99, 102, 241, 0.2);
+    }
+
+    /* Subtle pulse animation for high priority badges */
+    @keyframes subtlePulse {
+
+      0%,
+      100% {
+        opacity: 1;
+        transform: scale(1);
+      }
+
+      50% {
+        opacity: 0.85;
+        transform: scale(1.02);
+      }
+    }
+
+    .badge-pulse {
+      animation: subtlePulse 3s infinite ease-in-out;
+    }
+
+    /* Ambient noise background */
+    .bg-mesh {
+      background-color: #020617;
+      background-image:
+        radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.12) 0px, transparent 50%),
+        radial-gradient(at 100% 0%, rgba(6, 182, 212, 0.10) 0px, transparent 50%),
+        radial-gradient(at 50% 100%, rgba(168, 85, 247, 0.08) 0px, transparent 50%);
+      background-attachment: fixed;
+    }
+  </style>
+</head>
+
+<body
+  class="bg-mesh text-slate-200 min-h-screen antialiased flex flex-col font-sans selection:bg-indigo-500 selection:text-white">
+
+  <!-- TOP GAMIFIED STATUS BAR (STICKY) -->
+  <header
+    class="sticky top-0 z-50 bg-slate-950/80 backdrop-blur-xl border-b border-slate-800/80 px-4 lg:px-8 py-2.5 transition-all">
+    <div class="max-w-7xl mx-auto flex items-center justify-between gap-4">
+
+      <!-- Brand & Mobile Toggle -->
+      <div class="flex items-center gap-3">
+        <button id="mobile-menu-btn"
+          class="lg:hidden text-slate-400 hover:text-white p-1.5 rounded-lg border border-slate-800 focus:outline-none"
+          aria-label="Abrir menú">
+          <i class="fa-solid fa-bars text-lg"></i>
+        </button>
+        <div class="flex items-center gap-2.5 cursor-pointer" onclick="switchTopic(1)">
+          <div
+            class="w-9 h-9 rounded-xl bg-gradient-to-tr from-indigo-600 to-cyan-400 flex items-center justify-center shadow-lg shadow-indigo-500/20">
+            <i class="fa-solid fa-chart-pie text-white text-sm"></i>
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="font-display font-bold text-base tracking-tight text-white">Marketing<span
+                  class="text-cyan-400">Hub</span></span>
+              <span
+                class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 font-semibold uppercase">360°
+                EdTech</span>
+            </div>
+            <p class="text-[11px] text-slate-400 font-medium hidden sm:block">Fundamentos de Marketing | UPDS</p>
+            <p class="text-[11px] text-slate-400 font-medium hidden sm:block">Lic. Ariel Martínez</p>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Search Trigger -->
+      <div class="flex-1 max-w-md mx-2 hidden md:block">
+        <div class="relative">
+          <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-xs text-slate-400"></i>
+          <input type="text" id="global-search-input"
+            placeholder="Buscar concepto (ej: CAC, MASDA, PESTEL, Omnicanal)..."
+            class="w-full bg-slate-900/90 text-xs text-slate-200 placeholder-slate-500 pl-9 pr-14 py-2 rounded-xl border border-slate-800 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/50 transition-all">
+          <span
+            class="absolute right-2.5 top-1/2 -translate-y-1/2 text-[10px] font-mono bg-slate-800 text-slate-400 px-1.5 py-0.5 rounded border border-slate-700/60">Ctrl+K</span>
+        </div>
+      </div>
+
+      <!-- Gamification Stats & Level Badges -->
+      <div class="flex items-center gap-3 sm:gap-6">
+        <!-- XP & Level Badge -->
+        <div class="flex items-center gap-2 bg-slate-900/90 border border-slate-800 px-3 py-1.5 rounded-xl">
+          <div class="w-6 h-6 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center text-xs">
+            <i class="fa-solid fa-bolt"></i>
+          </div>
+          <div class="text-left">
+            <div class="flex items-center gap-1.5">
+              <span id="user-xp" class="text-xs font-bold text-amber-300 font-mono">0 XP</span>
+              <span class="text-slate-500 text-[10px]">•</span>
+              <span id="user-rank" class="text-[10px] text-slate-300 font-semibold">Novato</span>
+            </div>
+            <div class="w-20 sm:w-28 bg-slate-800 h-1.5 rounded-full overflow-hidden mt-1">
+              <div id="xp-bar"
+                class="bg-gradient-to-r from-amber-500 to-cyan-400 h-full w-0 transition-all duration-500"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Mastered Concepts % -->
+        <div class="flex items-center gap-2">
+          <div class="relative w-8 h-8 flex items-center justify-center">
+            <svg class="w-8 h-8 transform -rotate-90">
+              <circle cx="16" cy="16" r="13" stroke="currentColor" stroke-width="2.5" class="text-slate-800"
+                fill="transparent" />
+              <circle id="progress-circle" cx="16" cy="16" r="13" stroke="currentColor" stroke-width="2.5"
+                class="text-emerald-400 transition-all duration-700" stroke-dasharray="81.68" stroke-dashoffset="81.68"
+                stroke-linecap="round" fill="transparent" />
+            </svg>
+            <span id="progress-percent" class="absolute text-[9px] font-mono font-bold text-white">0%</span>
+          </div>
+          <div class="hidden lg:block text-left">
+            <span class="text-[11px] font-semibold text-slate-200 block leading-tight">Dominio Total</span>
+            <span id="progress-count" class="text-[10px] text-slate-400">0/5 Módulos</span>
+          </div>
+        </div>
+
+        <!-- Reset Button -->
+        <button onclick="resetAllProgress()" title="Reiniciar progreso"
+          class="text-slate-500 hover:text-rose-400 text-xs p-1.5 transition-colors">
+          <i class="fa-solid fa-arrows-rotate"></i>
+        </button>
+
+      </div>
+    </div>
+
+    <!-- Mobile Search Row -->
+    <div class="mt-2 md:hidden">
+      <div class="relative">
+        <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-xs text-slate-400"></i>
+        <input type="text" id="mobile-search-input" placeholder="Buscar conceptos clave..."
+          class="w-full bg-slate-900 text-xs text-slate-200 placeholder-slate-500 pl-8 pr-4 py-1.5 rounded-lg border border-slate-800 focus:outline-none focus:border-indigo-500">
+      </div>
+    </div>
+  </header>
+
+  <!-- SEARCH MODAL RESULTS OVERLAY -->
+  <div id="search-modal"
+    class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-start justify-center pt-20 px-4">
+    <div
+      class="bg-slate-900 border border-slate-700/80 rounded-2xl w-full max-w-2xl max-h-[75vh] flex flex-col shadow-2xl overflow-hidden">
+      <div class="p-4 border-b border-slate-800 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <i class="fa-solid fa-bolt text-indigo-400"></i>
+          <span class="font-display font-semibold text-white">Resultados de Búsqueda Rápida</span>
+        </div>
+        <button onclick="closeSearchModal()" class="text-slate-400 hover:text-white p-1">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+      <div id="search-results-list" class="p-4 overflow-y-auto space-y-2 flex-1 divide-y divide-slate-800/40">
+        <!-- Injected dynamically -->
+      </div>
+      <div class="p-3 bg-slate-950/70 border-t border-slate-800 text-right text-[11px] text-slate-500">
+        Presiona <kbd class="px-1.5 py-0.5 bg-slate-800 rounded text-slate-300">Esc</kbd> para cerrar
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN APP CONTAINER -->
+  <div class="flex-1 max-w-7xl w-full mx-auto flex flex-col lg:flex-row gap-6 p-4 lg:p-8">
+
+    <!-- DESKTOP / TABLET SIDEBAR NAVIGATION -->
+    <aside id="sidebar"
+      class="fixed inset-y-0 left-0 z-40 w-72 bg-slate-950 border-r border-slate-800 p-6 flex flex-col justify-between transform -translate-x-full lg:translate-x-0 lg:static lg:w-72 lg:p-0 lg:border-none lg:bg-transparent transition-transform duration-300 ease-in-out">
+
+      <div class="space-y-6">
+        <!-- Mobile close button -->
+        <div class="flex items-center justify-between lg:hidden pb-4 border-b border-slate-800">
+          <span class="font-display font-bold text-white text-base">Menú del Curso</span>
+          <button id="close-mobile-menu" class="text-slate-400 hover:text-white">
+            <i class="fa-solid fa-xmark text-lg"></i>
+          </button>
+        </div>
+
+        <!-- Course Header Pill -->
+        <div
+          class="p-3.5 rounded-2xl bg-gradient-to-br from-indigo-950/50 via-slate-900 to-slate-900 border border-indigo-500/20">
+          <div class="flex items-center justify-between text-[11px] text-indigo-300 font-semibold mb-1">
+            <span>CURSO ACADÉMICO</span>
+            <span class="px-1.5 py-0.5 rounded bg-indigo-500/20 text-indigo-300">5 MÓDULOS</span>
+          </div>
+          <h2 class="font-display font-bold text-white text-sm">Fundamentos de Marketing</h2>
+          <p class="text-[11px] text-slate-400 mt-0.5">Ingeniería Comercial & Estrategia Digital</p>
+        </div>
+
+        <!-- Navigation Modules (Hick's Law - 5 clear targets) -->
+        <div class="space-y-1.5">
+          <div class="text-[10px] font-mono uppercase tracking-wider text-slate-500 px-3 font-semibold">Módulos de
+            Aprendizaje</div>
+
+          <!-- Module 1 Nav Button -->
+          <button onclick="switchTopic(1)" id="nav-btn-1"
+            class="w-full flex items-center justify-between p-3 rounded-xl transition-all duration-200 text-left group bg-indigo-600/20 text-indigo-300 border border-indigo-500/40">
+            <div class="flex items-center gap-3">
+              <div
+                class="w-8 h-8 rounded-lg bg-indigo-500/20 text-indigo-400 flex items-center justify-center text-xs group-hover:scale-110 transition-transform">
+                <i class="fa-solid fa-compass"></i>
+              </div>
+              <div>
+                <span class="text-xs font-bold block leading-tight">M1. Orígenes y Evolución</span>
+                <span class="text-[10px] text-slate-400">Estrategia Corporativa</span>
+              </div>
+            </div>
+            <span id="topic-status-1" class="w-2 h-2 rounded-full bg-slate-700"></span>
+          </button>
+
+          <!-- Module 2 Nav Button -->
+          <button onclick="switchTopic(2)" id="nav-btn-2"
+            class="w-full flex items-center justify-between p-3 rounded-xl transition-all duration-200 text-left group hover:bg-slate-900 text-slate-400 hover:text-slate-200 border border-transparent hover:border-slate-800">
+            <div class="flex items-center gap-3">
+              <div
+                class="w-8 h-8 rounded-lg bg-cyan-500/10 text-cyan-400 flex items-center justify-center text-xs group-hover:scale-110 transition-transform">
+                <i class="fa-solid fa-earth-americas"></i>
+              </div>
+              <div>
+                <span class="text-xs font-bold block leading-tight">M2. Entornos de Marketing</span>
+                <span class="text-[10px] text-slate-400">PESTEL, FODA & Ecosistemas</span>
+              </div>
+            </div>
+            <span id="topic-status-2" class="w-2 h-2 rounded-full bg-slate-700"></span>
+          </button>
+
+          <!-- Module 3 Nav Button -->
+          <button onclick="switchTopic(3)" id="nav-btn-3"
+            class="w-full flex items-center justify-between p-3 rounded-xl transition-all duration-200 text-left group hover:bg-slate-900 text-slate-400 hover:text-slate-200 border border-transparent hover:border-slate-800">
+            <div class="flex items-center gap-3">
+              <div
+                class="w-8 h-8 rounded-lg bg-purple-500/10 text-purple-400 flex items-center justify-center text-xs group-hover:scale-110 transition-transform">
+                <i class="fa-solid fa-brain"></i>
+              </div>
+              <div>
+                <span class="text-xs font-bold block leading-tight">M3. Consumidor Digital</span>
+                <span class="text-[10px] text-slate-400">Funnel, Ética & Ciberseguridad</span>
+              </div>
+            </div>
+            <span id="topic-status-3" class="w-2 h-2 rounded-full bg-slate-700"></span>
+          </button>
+
+          <!-- Module 4 Nav Button -->
+          <button onclick="switchTopic(4)" id="nav-btn-4"
+            class="w-full flex items-center justify-between p-3 rounded-xl transition-all duration-200 text-left group hover:bg-slate-900 text-slate-400 hover:text-slate-200 border border-transparent hover:border-slate-800">
+            <div class="flex items-center gap-3">
+              <div
+                class="w-8 h-8 rounded-lg bg-amber-500/10 text-amber-400 flex items-center justify-center text-xs group-hover:scale-110 transition-transform">
+                <i class="fa-solid fa-crosshairs"></i>
+              </div>
+              <div>
+                <span class="text-xs font-bold block leading-tight">M4. Segmentación & MASDA</span>
+                <span class="text-[10px] text-slate-400">Posicionamiento & IA</span>
+              </div>
+            </div>
+            <span id="topic-status-4" class="w-2 h-2 rounded-full bg-slate-700"></span>
+          </button>
+
+          <!-- Module 5 Nav Button -->
+          <button onclick="switchTopic(5)" id="nav-btn-5"
+            class="w-full flex items-center justify-between p-3 rounded-xl transition-all duration-200 text-left group hover:bg-slate-900 text-slate-400 hover:text-slate-200 border border-transparent hover:border-slate-800">
+            <div class="flex items-center gap-3">
+              <div
+                class="w-8 h-8 rounded-lg bg-emerald-500/10 text-emerald-400 flex items-center justify-center text-xs group-hover:scale-110 transition-transform">
+                <i class="fa-solid fa-cubes"></i>
+              </div>
+              <div>
+                <span class="text-xs font-bold block leading-tight">M5. Mix de Marketing 4Ps</span>
+                <span class="text-[10px] text-slate-400">Era Híbrida & ROI (CAC/LTV)</span>
+              </div>
+            </div>
+            <span id="topic-status-5" class="w-2 h-2 rounded-full bg-slate-700"></span>
+          </button>
+        </div>
+
+        <!-- Quick Study Tools Box -->
+        <div class="p-4 rounded-2xl bg-slate-900/60 border border-slate-800 space-y-3">
+          <div class="text-[11px] font-bold text-slate-300 flex items-center gap-2">
+            <i class="fa-solid fa-calculator text-cyan-400"></i>
+            <span>Simuladores Rápidos</span>
+          </div>
+          <div class="grid grid-cols-2 gap-2 text-[11px]">
+            <button onclick="switchTopic(4); switchSubView('simulator')"
+              class="p-2 bg-slate-800/80 hover:bg-indigo-600/30 hover:border-indigo-500/50 rounded-lg border border-slate-700/60 text-slate-300 font-medium text-center transition-all">
+              <i class="fa-solid fa-filter text-amber-400 block mb-1"></i>
+              Filtro MASDA
+            </button>
+            <button onclick="switchTopic(5); switchSubView('simulator')"
+              class="p-2 bg-slate-800/80 hover:bg-emerald-600/30 hover:border-emerald-500/50 rounded-lg border border-slate-700/60 text-slate-300 font-medium text-center transition-all">
+              <i class="fa-solid fa-chart-line text-emerald-400 block mb-1"></i>
+              CAC vs LTV
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Quick Audio Pronunciation info -->
+      <div class="pt-4 border-t border-slate-800/80 text-[11px] text-slate-500 flex items-center justify-between">
+        <span>Glosario con Audio EN/ES</span>
+        <i class="fa-solid fa-volume-high text-cyan-400"></i>
+      </div>
+    </aside>
+
+    <!-- CONTENT DISPLAY AREA -->
+    <main class="flex-1 min-w-0">
+
+      <!-- TOPIC HERO & VIEW SELECTOR TABS (Fitts's Law + Jakob's Law) -->
+      <div class="glass-card rounded-2xl p-6 mb-6">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div>
+            <div class="flex items-center gap-2 mb-2">
+              <span id="topic-badge"
+                class="px-2.5 py-0.5 rounded-full text-[11px] font-bold font-mono tracking-wide bg-indigo-500/20 text-indigo-300 border border-indigo-500/40">
+                TEMA 1
+              </span>
+              <span class="text-slate-500 text-xs">•</span>
+              <span id="topic-read-time" class="text-xs text-slate-400 flex items-center gap-1">
+                <i class="fa-regular fa-clock"></i> 8 min de lectura activa
+              </span>
+            </div>
+            <h1 id="topic-title" class="font-display font-extrabold text-2xl lg:text-3xl text-white tracking-tight">
+              Orígenes y Evolución del Marketing
+            </h1>
+            <p id="topic-subtitle" class="text-sm text-slate-400 mt-1 max-w-2xl">
+              De la producción masiva a la gestión de valor y sostenibilidad industrial.
+            </p>
+          </div>
+
+          <!-- Dual Study Mode Switcher (Miller's Law & Fitts's Law) -->
+          <div class="flex items-center p-1 bg-slate-950 rounded-xl border border-slate-800 self-start md:self-auto">
+            <button onclick="switchSubView('theory')" id="view-tab-theory"
+              class="px-3.5 py-2 rounded-lg text-xs font-semibold flex items-center gap-2 transition-all bg-indigo-600 text-white shadow-lg shadow-indigo-600/30">
+              <i class="fa-solid fa-book-open"></i>
+              <span>Teoría Visual</span>
+            </button>
+            <button onclick="switchSubView('flashcards')" id="view-tab-flashcards"
+              class="px-3.5 py-2 rounded-lg text-xs font-semibold flex items-center gap-2 text-slate-400 hover:text-slate-200 transition-all">
+              <i class="fa-solid fa-layer-group"></i>
+              <span>Flashcards 3D</span>
+            </button>
+            <button onclick="switchSubView('simulator')" id="view-tab-simulator"
+              class="px-3.5 py-2 rounded-lg text-xs font-semibold flex items-center gap-2 text-slate-400 hover:text-slate-200 transition-all">
+              <i class="fa-solid fa-flask"></i>
+              <span id="simulator-tab-name">Laboratorio</span>
+            </button>
+            <button onclick="switchSubView('quiz')" id="view-tab-quiz"
+              class="px-3.5 py-2 rounded-lg text-xs font-semibold flex items-center gap-2 text-slate-400 hover:text-slate-200 transition-all">
+              <i class="fa-solid fa-trophy text-amber-400"></i>
+              <span>Quiz XP</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Zeigarnik Effect: Topic Progress Checklist tracker -->
+        <div class="mt-6 pt-4 border-t border-slate-800/60 flex flex-wrap items-center justify-between gap-3 text-xs">
+          <div class="flex items-center gap-2">
+            <span class="text-slate-400 font-medium">Meta de dominio del tema:</span>
+            <span id="topic-checklist-ratio" class="font-mono text-cyan-400 font-bold">0/4 hitos completados</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="text-slate-500 text-[11px]">Marcar todos los conceptos estudiados:</span>
+            <button onclick="toggleAllChecklist(true)"
+              class="px-2 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 text-[10px] font-medium transition-colors">
+              Completar Todos (+40 XP)
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- DYNAMIC SUB-VIEWS INJECTION -->
+      <div id="subview-theory" class="space-y-6">
+        <!-- Injected dynamically per module -->
+      </div>
+
+      <div id="subview-flashcards" class="hidden space-y-6">
+        <!-- Injected dynamically with 3D Flip Cards -->
+      </div>
+
+      <div id="subview-simulator" class="hidden space-y-6">
+        <!-- Injected dynamically: MASDA (M4), CAC/LTV (M5), Roleplays (M1, M2, M3) -->
+      </div>
+
+      <div id="subview-quiz" class="hidden space-y-6">
+        <!-- Injected dynamically: 3 Interactive Questions with immediate feedback -->
+      </div>
+
+    </main>
+  </div>
+
+  <!-- FLOATING MOBILE BOTTOM NAVIGATION (Jakob's & Fitts's Law) -->
+  <nav
+    class="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-slate-950/90 backdrop-blur-lg border-t border-slate-800 px-2 py-2 flex items-center justify-around">
+    <button onclick="switchTopic(1)"
+      class="mobile-nav-item flex flex-col items-center gap-1 text-[10px] text-slate-400 focus:outline-none p-1">
+      <i class="fa-solid fa-compass text-sm"></i>
+      <span>M1. Origen</span>
+    </button>
+    <button onclick="switchTopic(2)"
+      class="mobile-nav-item flex flex-col items-center gap-1 text-[10px] text-slate-400 focus:outline-none p-1">
+      <i class="fa-solid fa-earth-americas text-sm"></i>
+      <span>M2. Entorno</span>
+    </button>
+    <button onclick="switchTopic(3)"
+      class="mobile-nav-item flex flex-col items-center gap-1 text-[10px] text-slate-400 focus:outline-none p-1">
+      <i class="fa-solid fa-brain text-sm"></i>
+      <span>M3. Consumidor</span>
+    </button>
+    <button onclick="switchTopic(4)"
+      class="mobile-nav-item flex flex-col items-center gap-1 text-[10px] text-slate-400 focus:outline-none p-1">
+      <i class="fa-solid fa-crosshairs text-sm"></i>
+      <span>M4. MASDA</span>
+    </button>
+    <button onclick="switchTopic(5)"
+      class="mobile-nav-item flex flex-col items-center gap-1 text-[10px] text-slate-400 focus:outline-none p-1">
+      <i class="fa-solid fa-cubes text-sm"></i>
+      <span>M5. 4Ps Mix</span>
+    </button>
+  </nav>
+
+  <!-- NOTIFICATION TOAST -->
+  <div id="toast"
+    class="fixed bottom-16 lg:bottom-6 right-6 z-50 transform translate-y-24 opacity-0 transition-all duration-300 pointer-events-none bg-slate-900 border border-indigo-500/50 shadow-2xl rounded-xl px-4 py-3 flex items-center gap-3">
+    <div id="toast-icon" class="w-8 h-8 rounded-lg bg-indigo-500/20 text-indigo-400 flex items-center justify-center">
+      <i class="fa-solid fa-star"></i>
+    </div>
+    <div>
+      <h4 id="toast-title" class="text-xs font-bold text-white">¡Puntos Ganados!</h4>
+      <p id="toast-desc" class="text-[11px] text-slate-300">+20 XP añadidos a tu perfil.</p>
+    </div>
+  </div>
+
+  <!-- SCRIPT ENGINE -->
+  <script>
+    /* =====================================================================
+       1. DATA STRUCTURES & ACADEMIC CONTENT (ALL 5 MODULES COMPLETE)
+       ===================================================================== */
+    const TOPICS_DATA = {
+      1: {
+        id: 1,
+        badge: "TEMA 1 • ESTRATEGIA CORPORATIVA",
+        title: "Orígenes y Evolución del Marketing",
+        subtitle: "De la producción masiva y la rentabilidad industrial a la gestión integral de valor y la economía circular.",
+        readTime: "8 min de estudio activo",
+        checkpoints: [
+          "Diferencia crítica entre Necesidades y Deseos",
+          "Línea de tiempo de los 5 hitos históricos",
+          "Miopía del Producto vs Sense & Respond",
+          "Los 4 pilares del Marketing Holístico"
+        ],
+        theoryHtml: `
+          <!-- Bento Grid: Conceptos Nucleares (Miller's Law - 4 chunks) -->
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            
+            <!-- Card 1: Definición Socio-Administrativa -->
+            <div class="glass-card rounded-2xl p-5 border-t-2 border-t-indigo-500">
+              <div class="w-10 h-10 rounded-xl bg-indigo-500/10 text-indigo-400 flex items-center justify-center mb-3">
+                <i class="fa-solid fa-arrows-split-up-and-left text-lg"></i>
+              </div>
+              <span class="text-[10px] font-mono uppercase tracking-wider text-indigo-400 font-bold">Definición Real</span>
+              <h3 class="font-display font-bold text-white text-base mt-1">Proceso Socio-Administrativo</h3>
+              <p class="text-xs text-slate-400 mt-2 leading-relaxed">
+                El marketing no es simplemente publicidad ni vender cosas; es el proceso directivo por el cual individuos y grupos obtienen lo que necesitan y desean mediante la <strong class="text-slate-200">creación e intercambio de valor</strong>.
+              </p>
+            </div>
+
+            <!-- Card 2: Deseos vs Necesidades (Von Restorff Effect) -->
+            <div class="glass-card rounded-2xl p-5 border-t-2 border-t-cyan-400">
+              <div class="w-10 h-10 rounded-xl bg-cyan-500/10 text-cyan-400 flex items-center justify-center mb-3">
+                <i class="fa-solid fa-heart-pulse text-lg"></i>
+              </div>
+              <span class="text-[10px] font-mono uppercase tracking-wider text-cyan-400 font-bold">Psicología del Consumidor</span>
+              <h3 class="font-display font-bold text-white text-base mt-1">Necesidad vs. Deseo</h3>
+              <div class="mt-2 space-y-1.5 text-xs text-slate-400">
+                <p><span class="text-cyan-300 font-semibold">• Necesidad:</span> Estado de carencia básica intrínseca (alimentación, seguridad, abrigo).</p>
+                <p><span class="text-indigo-300 font-semibold">• Deseo:</span> Forma concreta que adopta una necesidad modelada por la cultura y personalidad (ej. agua vs gaseosa local).</p>
+              </div>
+            </div>
+
+            <!-- Card 3: Rol Estratégico -->
+            <div class="glass-card rounded-2xl p-5 border-t-2 border-t-emerald-400">
+              <div class="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center mb-3">
+                <i class="fa-solid fa-chess-knight text-lg"></i>
+              </div>
+              <span class="text-[10px] font-mono uppercase tracking-wider text-emerald-400 font-bold">Dirección General</span>
+              <h3 class="font-display font-bold text-white text-base mt-1">Rol Estratégico</h3>
+              <p class="text-xs text-slate-400 mt-2 leading-relaxed">
+                Define el rumbo y modelo de negocio de toda la corporación. No es un apéndice de fin de línea: guía la asignación de recursos, inversiones en I+D y el portafolio de productos.
+              </p>
+            </div>
+
+            <!-- Card 4: El Puente Crítico -->
+            <div class="glass-card rounded-2xl p-5 border-t-2 border-t-amber-400">
+              <div class="w-10 h-10 rounded-xl bg-amber-500/10 text-amber-400 flex items-center justify-center mb-3">
+                <i class="fa-solid fa-bridge text-lg"></i>
+              </div>
+              <span class="text-[10px] font-mono uppercase tracking-wider text-amber-400 font-bold">Ingeniería & Negocio</span>
+              <h3 class="font-display font-bold text-white text-base mt-1">El Puente Crítico</h3>
+              <p class="text-xs text-slate-400 mt-2 leading-relaxed">
+                Conecta la <span class="text-amber-300 font-semibold">Capacidad Productiva</span> técnica de la planta/fábrica con las <span class="text-amber-300 font-semibold">Necesidades del Mercado</span>, evitando producir inventario estancado.
+              </p>
+            </div>
+
+          </div>
+
+          <!-- LÍNEA DE TIEMPO INTERACTIVA (De la Producción al Valor) -->
+          <div class="glass-card rounded-2xl p-6">
+            <div class="flex items-center justify-between mb-4">
+              <div>
+                <span class="text-[10px] font-mono uppercase tracking-wider text-indigo-400 font-bold">Línea de Tiempo Histórica</span>
+                <h3 class="font-display font-bold text-lg text-white">Evolución de Enfoques de Negocio</h3>
+              </div>
+              <span class="text-xs text-slate-400 bg-slate-800/80 px-2.5 py-1 rounded-full border border-slate-700/60">Haz clic en cada era para ver detalles</span>
+            </div>
+
+            <!-- Timeline Navigator -->
+            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2.5 mb-6">
+              <button onclick="selectTimelineEra(1)" id="era-btn-1" class="timeline-era-btn p-3 rounded-xl bg-indigo-600/30 border border-indigo-500/50 text-left transition-all">
+                <span class="text-[10px] font-mono text-indigo-300 font-bold block">1850 - 1920</span>
+                <span class="text-xs font-bold text-white block mt-0.5">Producción</span>
+                <span class="text-[10px] text-slate-400">Costos & Eficiencia</span>
+              </button>
+              <button onclick="selectTimelineEra(2)" id="era-btn-2" class="timeline-era-btn p-3 rounded-xl bg-slate-900 border border-slate-800 hover:border-slate-700 text-left transition-all">
+                <span class="text-[10px] font-mono text-slate-400 font-bold block">1920 - 1950</span>
+                <span class="text-xs font-bold text-slate-300 block mt-0.5">Ventas</span>
+                <span class="text-[10px] text-slate-400">Persuasión & Presión</span>
+              </button>
+              <button onclick="selectTimelineEra(3)" id="era-btn-3" class="timeline-era-btn p-3 rounded-xl bg-slate-900 border border-slate-800 hover:border-slate-700 text-left transition-all">
+                <span class="text-[10px] font-mono text-slate-400 font-bold block">1950 - 1990</span>
+                <span class="text-xs font-bold text-slate-300 block mt-0.5">Marketing</span>
+                <span class="text-[10px] text-slate-400">Consumidor al Centro</span>
+              </button>
+              <button onclick="selectTimelineEra(4)" id="era-btn-4" class="timeline-era-btn p-3 rounded-xl bg-slate-900 border border-slate-800 hover:border-slate-700 text-left transition-all">
+                <span class="text-[10px] font-mono text-slate-400 font-bold block">1990 - 2010</span>
+                <span class="text-xs font-bold text-slate-300 block mt-0.5">Relacional</span>
+                <span class="text-[10px] text-slate-400">CRM & Lealtad LTV</span>
+              </button>
+              <button onclick="selectTimelineEra(5)" id="era-btn-5" class="timeline-era-btn p-3 rounded-xl bg-slate-900 border border-slate-800 hover:border-slate-700 text-left transition-all col-span-2 sm:col-span-1">
+                <span class="text-[10px] font-mono text-cyan-400 font-bold block">Actualidad</span>
+                <span class="text-xs font-bold text-slate-300 block mt-0.5">Sostenible & IA</span>
+                <span class="text-[10px] text-slate-400">Datos & Circular</span>
+              </button>
+            </div>
+
+            <!-- Dynamic Era Detail Box -->
+            <div id="era-detail-box" class="p-4 rounded-xl bg-slate-950/70 border border-slate-800/80 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+              <div>
+                <span id="era-detail-badge" class="px-2 py-0.5 rounded text-[10px] font-bold font-mono bg-indigo-500/20 text-indigo-300">ERA DE PRODUCCIÓN (1850-1920)</span>
+                <h4 id="era-detail-title" class="font-display font-bold text-white text-sm mt-1">Premisa: "Si lo fabricas bien y barato, se venderá solo"</h4>
+                <p id="era-detail-desc" class="text-xs text-slate-400 mt-1 max-w-2xl leading-relaxed">
+                  Foco industrial absoluto en la capacidad de producción en serie, economías de escala y estandarización mecánica (ej. Ford Modelo T). La demanda superaba a la oferta; no existía necesidad de investigar al cliente.
+                </p>
+              </div>
+              <div id="era-detail-metric" class="px-4 py-2 bg-slate-900 rounded-lg border border-slate-800 text-right whitespace-nowrap">
+                <span class="text-[10px] text-slate-500 block">Foco Clave</span>
+                <span class="text-xs font-mono font-bold text-indigo-400">Reducción de Costo Unitario</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- COMPARATIVA DE ENFOQUES: MIOPÍA VS SENSE & RESPOND -->
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            
+            <!-- Enfoque 1: Miopía -->
+            <div class="glass-card rounded-2xl p-5 border-l-4 border-l-rose-500">
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-[10px] font-mono uppercase tracking-wider text-rose-400 font-bold">Trampa Fatal</span>
+                <i class="fa-solid fa-eye-slash text-rose-400"></i>
+              </div>
+              <h3 class="font-display font-bold text-white text-base">Miopía del Producto</h3>
+              <p class="text-xs text-slate-400 mt-2">
+                Enfoque ciego en las características técnicas del producto en lugar de la necesidad subyacente que resuelve.
+              </p>
+              <div class="mt-3 p-2 rounded bg-rose-500/10 border border-rose-500/20 text-[11px] text-rose-300">
+                <strong>Ejemplo Theodore Levitt:</strong> Los ferrocarriles perdieron clientes frente a los aviones porque se creían en el "negocio de trenes" en vez de en el "negocio del transporte".
+              </div>
+            </div>
+
+            <!-- Enfoque 2: Ventas -->
+            <div class="glass-card rounded-2xl p-5 border-l-4 border-l-amber-500">
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-[10px] font-mono uppercase tracking-wider text-amber-400 font-bold">Transaccional</span>
+                <i class="fa-solid fa-bullhorn text-amber-400"></i>
+              </div>
+              <h3 class="font-display font-bold text-white text-base">Orientación a Ventas</h3>
+              <p class="text-xs text-slate-400 mt-2">
+                Filosofía <strong class="text-amber-300">"Make and Sell"</strong> (Fabricar y empujar). El objetivo es liquidar el inventario acumulado a través de persuasión agresiva y promociones.
+              </p>
+              <div class="mt-3 p-2 rounded bg-amber-500/10 border border-amber-500/20 text-[11px] text-amber-300">
+                <strong>Riesgo:</strong> Cero lealtad. Vendes una vez y destruyes la reputación si el producto no satisfizo al cliente.
+              </div>
+            </div>
+
+            <!-- Enfoque 3: El Mercado al Centro (Sense & Respond) -->
+            <div class="glass-card rounded-2xl p-5 border-l-4 border-l-emerald-500 shadow-glow-emerald">
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-[10px] font-mono uppercase tracking-wider text-emerald-400 font-bold">Óptimo Estratégico</span>
+                <i class="fa-solid fa-compass text-emerald-400"></i>
+              </div>
+              <h3 class="font-display font-bold text-white text-base">El Mercado al Centro</h3>
+              <p class="text-xs text-slate-400 mt-2">
+                Filosofía <strong class="text-emerald-300">"Sense & Respond"</strong> (Sentir y responder proactivamente). Encontrar productos adecuados para tus clientes, no clientes para tus productos.
+              </p>
+              <div class="mt-3 p-2 rounded bg-emerald-500/10 border border-emerald-500/20 text-[11px] text-emerald-300">
+                <strong>Rentabilidad Real:</strong> Generada a través de la satisfacción total y retención prolongada con datos que preceden a la manufactura.
+              </div>
+            </div>
+
+          </div>
+
+          <!-- MARKETING HOLÍSTICO (4 PILARES) & ECOSISTEMAS DIGITALES -->
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            
+            <!-- Diagrama Interactivo de Marketing Holístico -->
+            <div class="glass-card rounded-2xl p-6">
+              <span class="text-[10px] font-mono uppercase tracking-wider text-purple-400 font-bold">Visión 360° Integral</span>
+              <h3 class="font-display font-bold text-lg text-white mt-1">Los 4 Pilares del Marketing Holístico</h3>
+              <p class="text-xs text-slate-400 mt-1 mb-4">Todo importa: los procesos internos, canales, sociedad y relaciones clave.</p>
+
+              <div class="grid grid-cols-2 gap-3 text-xs">
+                <div class="p-3.5 rounded-xl bg-slate-900 border border-indigo-500/30 hover:border-indigo-500 transition-all">
+                  <div class="flex items-center gap-2 text-indigo-400 font-bold mb-1">
+                    <i class="fa-solid fa-users"></i>
+                    <span>Marketing Interno</span>
+                  </div>
+                  <p class="text-[11px] text-slate-400">
+                    Capacitación y motivación del equipo humano. Los colaboradores son el primer cliente ("empleados que aman la marca generan clientes que aman la marca").
+                  </p>
+                </div>
+
+                <div class="p-3.5 rounded-xl bg-slate-900 border border-cyan-500/30 hover:border-cyan-500 transition-all">
+                  <div class="flex items-center gap-2 text-cyan-400 font-bold mb-1">
+                    <i class="fa-solid fa-network-wired"></i>
+                    <span>Marketing Integrado</span>
+                  </div>
+                  <p class="text-[11px] text-slate-400">
+                    Sincronización impecable de las 4Ps y canales (físicos y digitales) para comunicar un mensaje unificado sin discrepancias.
+                  </p>
+                </div>
+
+                <div class="p-3.5 rounded-xl bg-slate-900 border border-emerald-500/30 hover:border-emerald-500 transition-all">
+                  <div class="flex items-center gap-2 text-emerald-400 font-bold mb-1">
+                    <i class="fa-solid fa-earth-americas"></i>
+                    <span>Marketing Social</span>
+                  </div>
+                  <p class="text-[11px] text-slate-400">
+                    Ética comunitaria, sostenibilidad ambiental, economía circular y bienestar social a largo plazo más allá del beneficio financiero inmediato.
+                  </p>
+                </div>
+
+                <div class="p-3.5 rounded-xl bg-slate-900 border border-amber-500/30 hover:border-amber-500 transition-all">
+                  <div class="flex items-center gap-2 text-amber-400 font-bold mb-1">
+                    <i class="fa-solid fa-handshake"></i>
+                    <span>Marketing de Relaciones</span>
+                  </div>
+                  <p class="text-[11px] text-slate-400">
+                    Vínculos duraderos con clientes clave, distribuidores, agencias y proveedores para co-crear valor sostenido en el tiempo.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Ecosistemas Digitales y Green Marketing Industrial -->
+            <div class="space-y-4">
+              <div class="glass-card rounded-2xl p-5 border-l-4 border-l-cyan-400">
+                <div class="flex items-center gap-2 text-cyan-400 text-xs font-bold font-mono">
+                  <i class="fa-solid fa-chart-line"></i>
+                  <span>DATOS & OMNICANALIDAD</span>
+                </div>
+                <h4 class="font-display font-bold text-white text-sm mt-1">Ecosistemas Digitales Conectados</h4>
+                <p class="text-xs text-slate-400 mt-1">
+                  Transición de mercados físicos a ecosistemas digitales donde el dato es la nueva materia prima industrial. Permite a PyMEs competir globalmente con una arquitectura omnicanal sin fricciones.
+                </p>
+              </div>
+
+              <div class="glass-card rounded-2xl p-5 border-l-4 border-l-emerald-400">
+                <div class="flex items-center gap-2 text-emerald-400 text-xs font-bold font-mono">
+                  <i class="fa-solid fa-recycle"></i>
+                  <span>GREEN MARKETING INDUSTRIAL</span>
+                </div>
+                <h4 class="font-display font-bold text-white text-sm mt-1">Economía Circular como Ventaja Competitiva</h4>
+                <p class="text-xs text-slate-400 mt-1">
+                  En el mercado global B2B, la sostenibilidad ya no es un gasto altruista sino una inversión obligatoria para ganar licitaciones y obtener certificaciones internacionales (reducción drástica de huella de carbono).
+                </p>
+              </div>
+
+              <!-- Reto Profesional -->
+              <div class="p-4 rounded-xl bg-slate-900/90 border border-slate-800 flex items-center justify-between">
+                <div>
+                  <span class="text-[10px] font-mono text-purple-400 font-bold block">EL RETO PROFESIONAL</span>
+                  <span class="text-xs font-semibold text-slate-200">Erradicar mentalidad extractivista y fusionar Ingeniería + Mercado con IA</span>
+                </div>
+                <span class="w-8 h-8 rounded-lg bg-purple-500/20 text-purple-400 flex items-center justify-center text-xs">
+                  <i class="fa-solid fa-microchip"></i>
+                </span>
+              </div>
+            </div>
+
+          </div>
+        `,
+        roleplay: {
+          title: "Pivoteando el Negocio Orureño",
+          subtitle: "Simulación de resolución holística en equipo (20 minutos)",
+          desc: "Una empresa manufacturera tradicional de calzados de seguridad industrial en Oruro está sufriendo pérdidas por la entrada de calzado asiático de bajo costo. Tienen maquinaria industrial excelente pero cero investigación de mercado y su único canal son distribuidores físicos.",
+          tasks: [
+            "1. Redefinir la propuesta de valor aplicando la filosofía 'Sense & Respond'.",
+            "2. Proponer una estrategia de Economía Circular (Green Marketing) para ganar licitaciones mineras.",
+            "3. Diseñar un ecosistema digital B2B (Data Analytics + WhatsApp cifrado + Muestras Phygital)."
+          ],
+          timerMinutes: 20
+        },
+        glossary: [
+          { es: "Estrategia de Marketing", en: "Marketing Strategy", def: "Plan maestro que alinea los recursos y capacidades de la empresa con las oportunidades del mercado." },
+          { es: "Creación de Valor", en: "Value Creation", def: "Generación de beneficios tangibles e intangibles que superan el costo total percibido por el cliente." },
+          { es: "Necesidades y Deseos", en: "Needs and Wants", def: "Carencias básicas humanas frente a preferencias específicas modeladas por la cultura." },
+          { es: "Rol Estratégico", en: "Strategic Role", def: "Función directiva que define el rumbo competitivo y el modelo de negocio corporativo." },
+          { es: "Producción Masiva", en: "Mass Production", def: "Manufactura a gran escala orientada a reducir costos unitarios mediante economías de escala." },
+          { es: "Relación con el Cliente", en: "Customer Relationship", def: "Vínculo continuo a largo plazo enfocado en fidelización y valor de vida del cliente (LTV)." },
+          { es: "Miopía del Marketing", en: "Marketing Myopia", def: "Foco ciego y exclusivo en el producto existente sin comprender la necesidad de fondo del cliente." },
+          { es: "Venta Agresiva", en: "Hard Selling", def: "Técnicas de persuasión intensa para forzar transacciones inmediatas sin considerar la satisfacción futura." },
+          { es: "Orientación al Cliente", en: "Customer Orientation", def: "Filosofía corporativa que diseña todas las operaciones en torno a resolver necesidades del consumidor." },
+          { es: "Investigación de Mercado", en: "Market Research", def: "Recopilación y análisis sistemático de datos para la toma fundamentada de decisiones comerciales." },
+          { es: "Omnicanalidad", en: "Omnichannel", def: "Experiencia unificada e interconectada a través de todos los canales de venta físicos y digitales." },
+          { es: "Analítica de Datos", en: "Data Analytics", def: "Examen de grandes conjuntos de datos para descubrir patrones de consumo y predecir demanda." },
+          { es: "Marketing Verde", en: "Green Marketing", def: "Desarrollo y comercialización de productos con impacto ambiental neutral o positivo." },
+          { es: "Economía Circular", en: "Circular Economy", def: "Modelo de producción industrial basado en reusar, reparar y reciclar materiales en ciclo cerrado." },
+          { es: "Propuesta de Valor", en: "Value Proposition", def: "Conjunto exclusivo de razones y soluciones por las cuales un cliente elige a tu empresa frente a competidores." },
+          { es: "Ventaja Competitiva", en: "Competitive Advantage", def: "Atributo único y difícil de imitar que permite a una empresa superar a sus rivales de forma sostenible." }
+        ],
+        quiz: [
+          {
+            q: "¿Cuál es la diferencia fundamental entre una necesidad y un deseo en marketing?",
+            options: [
+              "La necesidad es cara y el deseo es económico",
+              "La necesidad es un estado intrínseco de carencia básica; el deseo es la forma concreta que adopta moldeada por la cultura",
+              "Las empresas crean necesidades a través de publicidad agresiva",
+              "No existe diferencia; son sinónimos técnicos en el marketing actual"
+            ],
+            correct: 1,
+            feedback: "¡Exacto! Las necesidades son intrínsecas (sed, hambre, seguridad), mientras que los deseos son moldeados por la cultura y la oferta del mercado (ej. querer agua mineral de una marca específica)."
+          },
+          {
+            q: "Theodore Levitt definió la 'Miopía del Marketing' principalmente como:",
+            options: [
+              "Falta de presupuesto en agencias de diseño gráfico",
+              "Un enfoque ciego en el producto técnico en lugar de en la necesidad profunda que satisface",
+              "La incapacidad de exportar a mercados internacionales",
+              "No usar inteligencia artificial generativa en las 4Ps"
+            ],
+            correct: 1,
+            feedback: "¡Correcto! Las empresas que sufren miopía se enamoran de su producto y pierden de vista el cambio de hábitos de los consumidores (como los ferrocarriles frente a los aviones)."
+          },
+          {
+            q: "El pilar del 'Marketing Interno' dentro del enfoque Holístico se enfoca en:",
+            options: [
+              "Instalar computadoras de última generación en la planta",
+              "Vender productos exclusivamente dentro de la fábrica",
+              "Capacitar, motivar y alinear a los empleados como el primer cliente de la organización",
+              "Diseñar empaques biodegradables para el mercado local"
+            ],
+            correct: 2,
+            feedback: "¡Brillante! El marketing interno garantiza que los colaboradores comprendan y vivan la propuesta de valor antes de proyectarla a los clientes externos."
+          }
+        ]
+      },
+
+      2: {
+        id: 2,
+        badge: "TEMA 2 • ANÁLISIS ESTRATÉGICO",
+        title: "Entornos de Marketing y Ecosistemas Digitales",
+        subtitle: "Fuerzas controlables e incontrolables, matrices PESTEL y FODA contextualizadas, y nuevos modelos de negocio.",
+        readTime: "9 min de estudio activo",
+        checkpoints: [
+          "Microentorno (controlable) vs Macroentorno (incontrolable)",
+          "Matriz PESTEL contextualizada en el Altiplano / Bolivia",
+          "FODA y 5 Fuerzas de Porter",
+          "Investigación Tradicional vs Digital y Modelos B2B/B2C/D2C/B2S"
+        ],
+        theoryHtml: `
+          <!-- MICRO VS MACRO ENTORNO (Hick's Law - 2 visual pillars) -->
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            
+            <!-- Microentorno -->
+            <div class="glass-card rounded-2xl p-6 border-l-4 border-l-indigo-500">
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-[10px] font-mono uppercase tracking-wider text-indigo-400 font-bold">Fuerzas Cercanas & Semiintencionadas</span>
+                <span class="px-2 py-0.5 rounded bg-indigo-500/20 text-indigo-300 text-[10px] font-bold">MICROENTORNO</span>
+              </div>
+              <h3 class="font-display font-bold text-white text-lg">Actores Clave Cercanos</h3>
+              <p class="text-xs text-slate-400 mt-1 mb-4">Afectan directamente la capacidad inmediata de servir a los clientes finales.</p>
+
+              <div class="grid grid-cols-2 gap-3 text-xs">
+                <div class="p-3 bg-slate-900 rounded-xl border border-slate-800">
+                  <div class="text-indigo-300 font-bold flex items-center gap-1.5 mb-1">
+                    <i class="fa-solid fa-building text-indigo-400"></i> La Empresa
+                  </div>
+                  <p class="text-[11px] text-slate-400">Cultura organizacional, capacidades de I+D, finanzas y sinergia de departamentos.</p>
+                </div>
+                <div class="p-3 bg-slate-900 rounded-xl border border-slate-800">
+                  <div class="text-indigo-300 font-bold flex items-center gap-1.5 mb-1">
+                    <i class="fa-solid fa-truck-field text-indigo-400"></i> Proveedores
+                  </div>
+                  <p class="text-[11px] text-slate-400">Poder de negociación de insumos, estabilidad de entregas y calidad del suministro.</p>
+                </div>
+                <div class="p-3 bg-slate-900 rounded-xl border border-slate-800">
+                  <div class="text-indigo-300 font-bold flex items-center gap-1.5 mb-1">
+                    <i class="fa-solid fa-boxes-packing text-indigo-400"></i> Intermediarios
+                  </div>
+                  <p class="text-[11px] text-slate-400">Mayoristas, brokers, logística de última milla y agencias de distribución.</p>
+                </div>
+                <div class="p-3 bg-slate-900 rounded-xl border border-slate-800">
+                  <div class="text-indigo-300 font-bold flex items-center gap-1.5 mb-1">
+                    <i class="fa-solid fa-users-viewfinder text-indigo-400"></i> Mercado & Clientes
+                  </div>
+                  <p class="text-[11px] text-slate-400">Competidores directos, tipos de clientes (B2B, B2C, B2G) y sustitutos.</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Macroentorno PESTEL -->
+            <div class="glass-card rounded-2xl p-6 border-l-4 border-l-cyan-400">
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-[10px] font-mono uppercase tracking-wider text-cyan-400 font-bold">Fuerzas Incontrolables Globales</span>
+                <span class="px-2 py-0.5 rounded bg-cyan-500/20 text-cyan-300 text-[10px] font-bold">MACROENTORNO</span>
+              </div>
+              <h3 class="font-display font-bold text-white text-lg">Matriz PESTEL Contextualizada</h3>
+              <p class="text-xs text-slate-400 mt-1 mb-4">Variables externas no controlables que configuran amenazas y oportunidades.</p>
+
+              <div class="grid grid-cols-2 sm:grid-cols-3 gap-2.5 text-xs">
+                <div class="p-2.5 rounded-lg bg-slate-900 border border-slate-800 hover:border-cyan-500/40 transition-colors">
+                  <span class="text-cyan-400 font-bold font-mono block text-[10px]">P • POLÍTICO</span>
+                  <span class="text-[11px] text-slate-300 font-semibold block mt-0.5">Aduanas & Normas</span>
+                  <p class="text-[10px] text-slate-400 mt-1">Estabilidad gubernamental y regulaciones de comercio exterior.</p>
+                </div>
+                <div class="p-2.5 rounded-lg bg-slate-900 border border-slate-800 hover:border-cyan-500/40 transition-colors">
+                  <span class="text-cyan-400 font-bold font-mono block text-[10px]">E • ECONÓMICO</span>
+                  <span class="text-[11px] text-slate-300 font-semibold block mt-0.5">Minería & Divisas</span>
+                  <p class="text-[10px] text-slate-400 mt-1">Cotizaciones globales, inflación y escasez de dólares.</p>
+                </div>
+                <div class="p-2.5 rounded-lg bg-slate-900 border border-slate-800 hover:border-cyan-500/40 transition-colors">
+                  <span class="text-cyan-400 font-bold font-mono block text-[10px]">S • SOCIAL</span>
+                  <span class="text-[11px] text-slate-300 font-semibold block mt-0.5">Festividades & Tradición</span>
+                  <p class="text-[10px] text-slate-400 mt-1">Flujo económico masivo por el Carnaval y costumbres locales.</p>
+                </div>
+                <div class="p-2.5 rounded-lg bg-slate-900 border border-slate-800 hover:border-cyan-500/40 transition-colors">
+                  <span class="text-cyan-400 font-bold font-mono block text-[10px]">T • TECNOLÓGICO</span>
+                  <span class="text-[11px] text-slate-300 font-semibold block mt-0.5">Billeteras QR & 4G</span>
+                  <p class="text-[10px] text-slate-400 mt-1">Adopción masiva de cobro simple y comercio digital.</p>
+                </div>
+                <div class="p-2.5 rounded-lg bg-slate-900 border border-slate-800 hover:border-cyan-500/40 transition-colors">
+                  <span class="text-cyan-400 font-bold font-mono block text-[10px]">E • ECOLÓGICO</span>
+                  <span class="text-[11px] text-slate-300 font-semibold block mt-0.5">Clima Altiplánico</span>
+                  <p class="text-[10px] text-slate-400 mt-1">Altitud, radiación UV extrema e impacto ambiental minero.</p>
+                </div>
+                <div class="p-2.5 rounded-lg bg-slate-900 border border-slate-800 hover:border-cyan-500/40 transition-colors">
+                  <span class="text-cyan-400 font-bold font-mono block text-[10px]">L • LEGAL</span>
+                  <span class="text-[11px] text-slate-300 font-semibold block mt-0.5">Leyes Laborales</span>
+                  <p class="text-[10px] text-slate-400 mt-1">Derecho del consumidor, patentes SENAPI y normativas.</p>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- MATRICES ESTRATÉGICAS: FODA Y PORTER INTERACTIVO -->
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            
+            <!-- Matriz FODA (SWOT) -->
+            <div class="glass-card rounded-2xl p-6">
+              <span class="text-[10px] font-mono uppercase tracking-wider text-amber-400 font-bold">Diagnóstico Estratégico</span>
+              <h3 class="font-display font-bold text-white text-lg mt-1">Matriz FODA Dinámica</h3>
+              <p class="text-xs text-slate-400 mt-1 mb-4">Cruce de variables internas (controlables) y externas (incontrolables).</p>
+
+              <div class="grid grid-cols-2 gap-3 text-xs">
+                <div class="p-3 bg-emerald-950/30 border border-emerald-500/30 rounded-xl">
+                  <span class="font-bold text-emerald-400 block font-mono text-[11px]">FORTALEZAS [Internas +]</span>
+                  <p class="text-[11px] text-slate-300 mt-1">Ventajas competitivas propias, patentes exclusivas, equipo de ingeniería de alto nivel.</p>
+                </div>
+                <div class="p-3 bg-cyan-950/30 border border-cyan-500/30 rounded-xl">
+                  <span class="font-bold text-cyan-400 block font-mono text-[11px]">OPORTUNIDADES [Externas +]</span>
+                  <p class="text-[11px] text-slate-300 mt-1">Tendencias favorables de mercado, adopción de pagos digitales, demanda internacional de quinua/litio.</p>
+                </div>
+                <div class="p-3 bg-amber-950/30 border border-amber-500/30 rounded-xl">
+                  <span class="font-bold text-amber-400 block font-mono text-[11px]">DEBILIDADES [Internas -]</span>
+                  <p class="text-[11px] text-slate-300 mt-1">Puntos ciegos estructurales, falta de digitalización comercial, dependencia de un solo canal físico.</p>
+                </div>
+                <div class="p-3 bg-rose-950/30 border border-rose-500/30 rounded-xl">
+                  <span class="font-bold text-rose-400 block font-mono text-[11px]">AMENAZAS [Externas -]</span>
+                  <p class="text-[11px] text-slate-300 mt-1">Inflación cambiaria, contrabando no fiscalizado, desabastecimiento de insumos importados.</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- 5 Fuerzas de Porter -->
+            <div class="glass-card rounded-2xl p-6">
+              <span class="text-[10px] font-mono uppercase tracking-wider text-purple-400 font-bold">Estructura Competitiva</span>
+              <h3 class="font-display font-bold text-white text-lg mt-1">5 Fuerzas de Michael Porter</h3>
+              <p class="text-xs text-slate-400 mt-1 mb-4">Determina la rentabilidad promedio a largo plazo de cualquier industria.</p>
+
+              <div class="space-y-2 text-xs">
+                <div class="flex items-center justify-between p-2.5 rounded-lg bg-slate-900 border border-slate-800">
+                  <span class="text-slate-300 font-medium">1. Rivalidad entre competidores existentes</span>
+                  <span class="px-2 py-0.5 rounded bg-rose-500/20 text-rose-300 font-mono text-[10px] font-bold">Guerra de Precios</span>
+                </div>
+                <div class="flex items-center justify-between p-2.5 rounded-lg bg-slate-900 border border-slate-800">
+                  <span class="text-slate-300 font-medium">2. Poder de negociación de los proveedores</span>
+                  <span class="px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 font-mono text-[10px] font-bold">Dependencia Insumos</span>
+                </div>
+                <div class="flex items-center justify-between p-2.5 rounded-lg bg-slate-900 border border-slate-800">
+                  <span class="text-slate-300 font-medium">3. Poder de negociación de los compradores</span>
+                  <span class="px-2 py-0.5 rounded bg-cyan-500/20 text-cyan-300 font-mono text-[10px] font-bold">Opciones Sustitutas</span>
+                </div>
+                <div class="flex items-center justify-between p-2.5 rounded-lg bg-slate-900 border border-slate-800">
+                  <span class="text-slate-300 font-medium">4. Amenaza de nuevos entrantes al mercado</span>
+                  <span class="px-2 py-0.5 rounded bg-indigo-500/20 text-indigo-300 font-mono text-[10px] font-bold">Barreras de Entrada</span>
+                </div>
+                <div class="flex items-center justify-between p-2.5 rounded-lg bg-slate-900 border border-slate-800">
+                  <span class="text-slate-300 font-medium">5. Amenaza de productos sustitutos</span>
+                  <span class="px-2 py-0.5 rounded bg-purple-500/20 text-purple-300 font-mono text-[10px] font-bold">Disrupción Tecnológica</span>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- INVESTIGACIÓN DE MERCADO TRADICIONAL VS DIGITAL VS PHYGITAL -->
+          <div class="glass-card rounded-2xl p-6">
+            <span class="text-[10px] font-mono uppercase tracking-wider text-cyan-400 font-bold">Metodologías de Investigación</span>
+            <h3 class="font-display font-bold text-white text-lg mt-1">Tradicional vs. Digital vs. Phygital</h3>
+            <p class="text-xs text-slate-400 mt-1 mb-5">Cómo obtener insights válidos en la era de los algoritmos y la analítica predictiva.</p>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+              <div class="p-4 rounded-xl bg-slate-900 border border-slate-800">
+                <span class="font-bold text-amber-400 font-mono text-[11px] block">ENFOQUE TRADICIONAL</span>
+                <ul class="mt-2 space-y-1.5 text-slate-400 text-[11px]">
+                  <li>• Focus Groups presenciales de 8 a 10 personas.</li>
+                  <li>• Encuestas físicas en campo con muestreo estático.</li>
+                  <li>• Observación directa en puntos de venta físicos.</li>
+                  <li class="text-amber-300/80 pt-1">⚠️ Limitación: Alto costo, lentitud y sesgo del entrevistador.</li>
+                </ul>
+              </div>
+
+              <div class="p-4 rounded-xl bg-slate-900 border border-slate-800">
+                <span class="font-bold text-cyan-400 font-mono text-[11px] block">ENFOQUE DIGITAL</span>
+                <ul class="mt-2 space-y-1.5 text-slate-400 text-[11px]">
+                  <li>• Social Listening y análisis de sentimiento con NLP.</li>
+                  <li>• Analítica web en tiempo real (Google Analytics, Hotjar).</li>
+                  <li>• Pruebas A/B continuas y mapeo del Customer Journey.</li>
+                  <li class="text-cyan-300/80 pt-1">⚡ Ventaja: Cero latencia, escalabilidad y datos reales de comportamiento.</li>
+                </ul>
+              </div>
+
+              <div class="p-4 rounded-xl bg-gradient-to-br from-indigo-950/40 to-slate-900 border border-indigo-500/40 shadow-glow-indigo">
+                <span class="font-bold text-indigo-300 font-mono text-[11px] block">INTEGRACIÓN PHYGITAL ÓPTIMA</span>
+                <ul class="mt-2 space-y-1.5 text-slate-300 text-[11px]">
+                  <li>• Sensores IoT o códigos QR en tiendas físicas para capturar datos.</li>
+                  <li>• Retargeting digital tras visitas presenciales a sucursales.</li>
+                  <li>• Cierre de compras online con retiro inmediato en tienda (BOPIS).</li>
+                  <li class="text-emerald-400 pt-1">🎯 Resultado: Cero fricción entre el mundo físico y el digital.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <!-- MODELOS DE NEGOCIO Y ARQUITECTURA COMERCIAL -->
+          <div class="glass-card rounded-2xl p-6">
+            <span class="text-[10px] font-mono uppercase tracking-wider text-emerald-400 font-bold">Arquitectura Comercial</span>
+            <h3 class="font-display font-bold text-white text-lg mt-1">Modelos de Negocio: El Cliente Define la Estructura</h3>
+            
+            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 mt-4 text-xs">
+              <div class="p-3 bg-slate-900 rounded-xl border border-slate-800">
+                <span class="font-mono font-bold text-indigo-400 block text-xs">B2B</span>
+                <span class="text-[11px] text-white font-semibold">Business to Business</span>
+                <p class="text-[10px] text-slate-400 mt-1">Transacciones entre empresas. Decisiones racionales basadas en ROI y especificaciones técnicas.</p>
+              </div>
+              <div class="p-3 bg-slate-900 rounded-xl border border-slate-800">
+                <span class="font-mono font-bold text-cyan-400 block text-xs">B2C</span>
+                <span class="text-[11px] text-white font-semibold">Business to Consumer</span>
+                <p class="text-[10px] text-slate-400 mt-1">Venta a consumidores finales. Impulsado por emociones, conveniencia, marca y gratificación inmediata.</p>
+              </div>
+              <div class="p-3 bg-slate-900 rounded-xl border border-slate-800">
+                <span class="font-mono font-bold text-amber-400 block text-xs">B2G</span>
+                <span class="text-[11px] text-white font-semibold">Business to Government</span>
+                <p class="text-[10px] text-slate-400 mt-1">Provisión al Estado (licitaciones SICOES). Rigurosidad legal, garantías y plazos de pago extendidos.</p>
+              </div>
+              <div class="p-3 bg-slate-900 rounded-xl border border-slate-800">
+                <span class="font-mono font-bold text-purple-400 block text-xs">D2C</span>
+                <span class="text-[11px] text-white font-semibold">Direct to Consumer</span>
+                <p class="text-[10px] text-slate-400 mt-1">Fabricante vende directo al usuario final vía e-commerce eliminando intermediarios y reteniendo margen.</p>
+              </div>
+              <div class="p-3 bg-slate-900 rounded-xl border border-slate-800">
+                <span class="font-mono font-bold text-emerald-400 block text-xs">C2C</span>
+                <span class="text-[11px] text-white font-semibold">Consumer to Consumer</span>
+                <p class="text-[10px] text-slate-400 mt-1">Intercambio comercial entre particulares facilitado por plataformas intermediarias (Marketplace).</p>
+              </div>
+              <div class="p-3 bg-slate-900 rounded-xl border border-slate-800">
+                <span class="font-mono font-bold text-rose-400 block text-xs">P2P</span>
+                <span class="text-[11px] text-white font-semibold">Peer to Peer</span>
+                <p class="text-[10px] text-slate-400 mt-1">Economía colaborativa descentralizada sin custodia central de activos (ej. carpooling, cripto).</p>
+              </div>
+              <div class="p-3 bg-slate-900 rounded-xl border border-slate-800 col-span-2 sm:col-span-1 lg:col-span-2">
+                <span class="font-mono font-bold text-indigo-300 block text-xs">B2S</span>
+                <span class="text-[11px] text-white font-semibold">Business to Student</span>
+                <p class="text-[10px] text-slate-400 mt-1">Modelos hiper-enfocados en la comunidad universitaria (tarifas estudiantiles, fotocopias digitales, microcréditos para material formativo).</p>
+              </div>
+            </div>
+          </div>
+        `,
+        roleplay: {
+          title: "Guerra de Entornos: Caso Estratégico",
+          subtitle: "Simulación de contingencia PESTEL en tiempo real",
+          desc: "Un decreto municipal eleva los impuestos al transporte de carga pesada en un 25% y simultáneamente una huelga aduanera bloquea la frontera con Chile por 15 días. Además, tu competidor directo acaba de lanzar una tienda D2C con envíos en el día mediante billeteras QR.",
+          tasks: [
+            "1. Clasificar qué variables del Micro y Macroentorno impactan a la empresa.",
+            "2. Proponer 2 acciones inmediatas para amortiguar el poder de los intermediarios.",
+            "3. Rediseñar el canal de ventas para no detener el flujo de caja."
+          ],
+          timerMinutes: 20
+        },
+        glossary: [
+          { es: "Entornos de Marketing", en: "Marketing Environments", def: "Conjunto de factores y fuerzas internas y externas que influyen en la capacidad de la empresa para construir relaciones con sus clientes." },
+          { es: "Fuerzas Controlables", en: "Controllable Forces", def: "Variables internas sobre las cuales la dirección de la empresa tiene autoridad de decisión directa (las 4Ps, personal, I+D)." },
+          { es: "Microentorno", en: "Microenvironment", def: "Actores cercanos a la empresa que afectan su capacidad de servir a sus clientes inmediatos." },
+          { es: "Cadena de Suministro", en: "Supply Chain", def: "Red logística que transforma materias primas en productos finales entregados al cliente." },
+          { es: "Intermediarios", en: "Intermediaries", def: "Empresas externas que ayudan a promocionar, vender y distribuir los bienes hacia los compradores finales." },
+          { es: "Macroentorno", en: "Macroenvironment", def: "Grandes fuerzas societarias incontrolables que configuran oportunidades y amenazas para toda una industria." },
+          { es: "Análisis PESTEL", en: "PESTEL Analysis", def: "Marco estratégico para evaluar factores Políticos, Económicos, Socioculturales, Tecnológicos, Ecológicos y Legales." },
+          { es: "Tendencias Económicas", en: "Economic Trends", def: "Patrones de inflación, tasas de interés, tipo de cambio y poder adquisitivo que rigen el gasto del consumidor." },
+          { es: "Matriz FODA", en: "SWOT Matrix", def: "Herramienta que cruza Fortalezas y Debilidades internas con Oportunidades y Amenazas externas." },
+          { es: "Cinco Fuerzas de Porter", en: "Porter's Five Forces", def: "Modelo de análisis industrial que evalúa rivalidad, nuevos entrantes, sustitutos y poder de clientes/proveedores." },
+          { es: "Amenazas", en: "Threats", def: "Factores externos desfavorables del macroentorno que pueden poner en riesgo la viabilidad del negocio." },
+          { es: "Ecosistema Digital", en: "Digital Ecosystem", def: "Red interconectada de plataformas web, software, redes sociales y datos que conectan marcas con consumidores." },
+          { es: "Comercio Electrónico", en: "E-Commerce", def: "Compra y venta de bienes y servicios a través de redes informáticas e internet." },
+          { es: "Investigación Tradicional", en: "Traditional Market Research", def: "Métodos cualitativos y cuantitativos físicos como encuestas de papel y grupos focales presenciales." },
+          { es: "Escucha Social", en: "Social Listening", def: "Monitoreo automatizado de menciones y conversaciones sobre una marca o industria en internet." },
+          { es: "Analítica Web", en: "Web Analytics", def: "Medición y análisis del tráfico online para optimizar el embudo de conversión de los sitios web." },
+          { es: "Inteligencia Artificial", en: "Artificial Intelligence", def: "Sistemas informáticos capaces de realizar tareas cognitivas complejas como análisis predictivo." },
+          { es: "Aprendizaje Automático", en: "Machine Learning", def: "Subcampo de la IA donde algoritmos mejoran su precisión predictiva a partir de la ingesta continua de datos." },
+          { es: "Grandes Datos", en: "Big Data", def: "Conjuntos masivos de información de alta velocidad, volumen y variedad imposibles de procesar manualmente." },
+          { es: "Mercado Meta", en: "Target Market", def: "Grupo específico de compradores al que la empresa decide orientar sus esfuerzos de marketing." },
+          { es: "Entre Pares", en: "Peer-to-Peer", def: "Transacciones directas entre individuos descentralizados sin intermediación de una corporación tradicional." },
+          { es: "Directo al Consumidor", en: "Direct-to-Consumer", def: "Venta directa del fabricante al cliente final sin pasar por tiendas minoristas mayoristas." },
+          { es: "Adaptabilidad", en: "Adaptability", def: "Capacidad organizacional para responder con agilidad a cambios bruscos del entorno comercial." },
+          { es: "Agilidad Estratégica", en: "Strategic Agility", def: "Habilidad directiva para modificar el rumbo y modelo de negocio ante nuevas disrupciones tecnológicas." }
+        ],
+        quiz: [
+          {
+            q: "Dentro de la Matriz PESTEL aplicada a Oruro, ¿a qué factor corresponde la fluctuación en las cotizaciones internacionales del Estaño y el Zinc?",
+            options: [
+              "Factor Político",
+              "Factor Económico",
+              "Factor Ecológico",
+              "Factor Legal"
+            ],
+            correct: 1,
+            feedback: "¡Correcto! Las cotizaciones de materias primas globales y el tipo de cambio son variables puramente Económicas del macroentorno."
+          },
+          {
+            q: "El modelo de negocio D2C (Direct-to-Consumer) se caracteriza fundamentalmente por:",
+            options: [
+              "Vender exclusivamente licitaciones al gobierno estatal (SICOES)",
+              "Fabricar el producto y venderlo directamente al consumidor final sin intermediarios minoristas",
+              "Realizar trueques de productos entre estudiantes universitarios",
+              "Depender al 100% de supermercados físicos tradicionales"
+            ],
+            correct: 1,
+            feedback: "¡Excelente! Al eliminar intermediarios, las marcas D2C capturan un mayor margen de beneficio y controlan la experiencia de cliente de punta a punta."
+          },
+          {
+            q: "¿Cuál de las siguientes describe mejor la integración 'Phygital' en investigación de mercado?",
+            options: [
+              "Imprimir encuestas físicas y enviarlas por correo postal",
+              "Cerrar todas las tiendas físicas para operar solo en Instagram",
+              "Conectar sensores y códigos QR en tiendas físicas con analítica de retargeting digital en tiempo real",
+              "Hacer focus groups únicamente por llamadas de voz tradicionales"
+            ],
+            correct: 2,
+            feedback: "¡Exacto! Phygital fusiona lo mejor del mundo físico (tacto, inmediatez) con la precisión de los datos digitales (trazabilidad, personalización)."
+          }
+        ]
+      },
+
+      3: {
+        id: 3,
+        badge: "TEMA 3 • CONSUMIDOR DIGITAL",
+        title: "Comportamiento del Consumidor Digital",
+        subtitle: "Impulsores cognitivos, embudo de 5 fases, Disonancia Cognitiva, Customer Journey, ética de datos y ciberseguridad.",
+        readTime: "8 min de estudio activo",
+        checkpoints: [
+          "Métricas Internas vs Factores Socioculturales",
+          "Las 5 fases del Embudo y Disonancia Cognitiva",
+          "Customer Journey y puntos de contacto (Touchpoints)",
+          "Tríada CIA, Phishing y Ciberseguridad en Marketing"
+        ],
+        theoryHtml: `
+          <!-- IMPULSORES DE DECISIÓN Y PERFILES -->
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            
+            <div class="glass-card rounded-2xl p-5 border-t-2 border-t-indigo-500">
+              <span class="text-[10px] font-mono uppercase tracking-wider text-indigo-400 font-bold">Psicología Profunda</span>
+              <h3 class="font-display font-bold text-white text-base mt-1">Métricas Internas</h3>
+              <p class="text-xs text-slate-400 mt-2">
+                Motivación psicológica (Pirámide de Maslow), percepción cognitiva selectiva (filtramos el 95% de anuncios) y estilos de personalidad individual.
+              </p>
+            </div>
+
+            <div class="glass-card rounded-2xl p-5 border-t-2 border-t-cyan-400">
+              <span class="text-[10px] font-mono uppercase tracking-wider text-cyan-400 font-bold">Influencia Colectiva</span>
+              <h3 class="font-display font-bold text-white text-base mt-1">Variables Externas</h3>
+              <p class="text-xs text-slate-400 mt-2">
+                Presión de pares en redes sociales, subculturas urbanas, proyección de estatus social y aprobación indispensable del núcleo familiar.
+              </p>
+            </div>
+
+            <div class="glass-card rounded-2xl p-5 border-t-2 border-t-purple-400">
+              <span class="text-[10px] font-mono uppercase tracking-wider text-purple-400 font-bold">Segmentación Estratégica</span>
+              <h3 class="font-display font-bold text-white text-base mt-1">B2C vs B2B vs PRO</h3>
+              <p class="text-xs text-slate-400 mt-2">
+                <strong class="text-indigo-300">B2C:</strong> Emoción y gratificación instantánea.<br>
+                <strong class="text-cyan-300">B2B:</strong> Retorno de inversión (ROI) calculado.<br>
+                <strong class="text-purple-300">PRO:</strong> Prosumidor (creador y consumidor simultáneo).
+              </p>
+            </div>
+
+          </div>
+
+          <!-- EL EMBUDO DE DECISIÓN DE 5 FASES (ARQUITECTURA DE CONVERSIÓN) -->
+          <div class="glass-card rounded-2xl p-6">
+            <div class="flex items-center justify-between mb-2">
+              <div>
+                <span class="text-[10px] font-mono uppercase tracking-wider text-indigo-400 font-bold">Arquitectura de Conversión</span>
+                <h3 class="font-display font-bold text-lg text-white">El Embudo de Decisión del Consumidor</h3>
+              </div>
+              <span class="text-[11px] font-mono px-2.5 py-1 rounded-full bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">
+                5 FASES CRÍTICAS
+              </span>
+            </div>
+            <p class="text-xs text-slate-400 mb-6">El viaje cognitivo desde el reconocimiento del déficit hasta la recompra fiel.</p>
+
+            <div class="grid grid-cols-1 sm:grid-cols-5 gap-3 text-xs">
+              
+              <!-- Fase 1 -->
+              <div class="p-4 rounded-xl bg-slate-900 border border-slate-800 text-center relative group hover:border-indigo-500 transition-all">
+                <span class="w-7 h-7 rounded-full bg-slate-800 text-indigo-400 font-mono font-bold flex items-center justify-center mx-auto mb-2 text-xs">1</span>
+                <span class="font-bold text-white block">Reconocimiento</span>
+                <span class="text-[10px] text-indigo-400 font-mono">Déficit Percibido</span>
+                <p class="text-[11px] text-slate-400 mt-2">El usuario detecta una discrepancia entre su estado actual y el estado ideal deseado.</p>
+              </div>
+
+              <!-- Fase 2 -->
+              <div class="p-4 rounded-xl bg-slate-900 border border-slate-800 text-center relative group hover:border-indigo-500 transition-all">
+                <span class="w-7 h-7 rounded-full bg-slate-800 text-cyan-400 font-mono font-bold flex items-center justify-center mx-auto mb-2 text-xs">2</span>
+                <span class="font-bold text-white block">Búsqueda</span>
+                <span class="text-[10px] text-cyan-400 font-mono">Exploración Activa</span>
+                <p class="text-[11px] text-slate-400 mt-2">Consulta de opiniones en TikTok, Google, foros y recomendaciones de amigos.</p>
+              </div>
+
+              <!-- Fase 3 -->
+              <div class="p-4 rounded-xl bg-slate-900 border border-slate-800 text-center relative group hover:border-indigo-500 transition-all">
+                <span class="w-7 h-7 rounded-full bg-slate-800 text-amber-400 font-mono font-bold flex items-center justify-center mx-auto mb-2 text-xs">3</span>
+                <span class="font-bold text-white block">Evaluación</span>
+                <span class="text-[10px] text-amber-400 font-mono">Comparación</span>
+                <p class="text-[11px] text-slate-400 mt-2">Ponderación de atributos: precio, garantía, velocidad de envío y reputación.</p>
+              </div>
+
+              <!-- Fase 4 -->
+              <div class="p-4 rounded-xl bg-slate-900 border border-slate-800 text-center relative group hover:border-indigo-500 transition-all">
+                <span class="w-7 h-7 rounded-full bg-slate-800 text-emerald-400 font-mono font-bold flex items-center justify-center mx-auto mb-2 text-xs">4</span>
+                <span class="font-bold text-white block">Decisión</span>
+                <span class="text-[10px] text-emerald-400 font-mono">Transacción</span>
+                <p class="text-[11px] text-slate-400 mt-2">Pago final cifrado (checkout sin fricción, QR simple o tarjeta).</p>
+              </div>
+
+              <!-- Fase 5 (Crucial) -->
+              <div class="p-4 rounded-xl bg-gradient-to-b from-indigo-950/60 to-slate-900 border border-indigo-500/40 text-center relative shadow-glow-indigo">
+                <span class="w-7 h-7 rounded-full bg-indigo-600 text-white font-mono font-bold flex items-center justify-center mx-auto mb-2 text-xs">5</span>
+                <span class="font-bold text-indigo-300 block">Post-compra</span>
+                <span class="text-[10px] text-cyan-300 font-mono">Disonancia Cognitiva</span>
+                <p class="text-[11px] text-slate-300 mt-2">Mitigar el remordimiento del comprador. <strong class="text-white">Aquí nace la lealtad real.</strong></p>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- CUSTOMER JOURNEY MAPPING & ADN DIGITAL -->
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            
+            <!-- Customer Journey Map -->
+            <div class="glass-card rounded-2xl p-6">
+              <span class="text-[10px] font-mono uppercase tracking-wider text-cyan-400 font-bold">Mapeo de Experiencia de Usuario</span>
+              <h3 class="font-display font-bold text-white text-lg mt-1">Customer Journey & Touchpoints</h3>
+              <p class="text-xs text-slate-400 mt-1 mb-4">Trazabilidad de puntos de contacto positivos y fricciones en cada interacción.</p>
+
+              <div class="space-y-2 text-xs">
+                <div class="p-2.5 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-between">
+                  <div>
+                    <span class="font-bold text-indigo-300">1. Descubrimiento (Awareness):</span>
+                    <span class="text-slate-400 block text-[11px]">Reel en Instagram / recomendación de influencer.</span>
+                  </div>
+                  <span class="text-[10px] font-mono text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded">Touchpoint +</span>
+                </div>
+                <div class="p-2.5 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-between">
+                  <div>
+                    <span class="font-bold text-cyan-300">2. Consideración:</span>
+                    <span class="text-slate-400 block text-[11px]">Visita a web con carga lenta (>3 segundos).</span>
+                  </div>
+                  <span class="text-[10px] font-mono text-rose-400 bg-rose-500/10 px-2 py-0.5 rounded">Fricción Crítica -</span>
+                </div>
+                <div class="p-2.5 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-between">
+                  <div>
+                    <span class="font-bold text-emerald-300">3. Adquisición:</span>
+                    <span class="text-slate-400 block text-[11px]">Cobro por QR automático sin registrarse con 10 campos.</span>
+                  </div>
+                  <span class="text-[10px] font-mono text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded">Touchpoint +</span>
+                </div>
+                <div class="p-2.5 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-between">
+                  <div>
+                    <span class="font-bold text-amber-300">4. Servicio & Fidelización:</span>
+                    <span class="text-slate-400 block text-[11px]">Mensaje de seguimiento por WhatsApp con guía de uso personalizada.</span>
+                  </div>
+                  <span class="text-[10px] font-mono text-indigo-400 bg-indigo-500/10 px-2 py-0.5 rounded">Lealtad LTV</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- ADN del Consumidor Digital & Tendencias Híbridas -->
+            <div class="glass-card rounded-2xl p-6">
+              <span class="text-[10px] font-mono uppercase tracking-wider text-purple-400 font-bold">Perfil de Vanguardia</span>
+              <h3 class="font-display font-bold text-white text-lg mt-1">El ADN del Consumidor Conectado</h3>
+              
+              <div class="grid grid-cols-2 gap-3 mt-4 text-xs">
+                <div class="p-3 bg-slate-900 rounded-xl border border-slate-800">
+                  <div class="text-purple-400 font-bold mb-1 flex items-center gap-1.5">
+                    <i class="fa-solid fa-bolt"></i> Hiperconectividad
+                  </div>
+                  <p class="text-[11px] text-slate-400">Tolerancia cero a la latencia o tiempos de espera en soporte.</p>
+                </div>
+                <div class="p-3 bg-slate-900 rounded-xl border border-slate-800">
+                  <div class="text-purple-400 font-bold mb-1 flex items-center gap-1.5">
+                    <i class="fa-solid fa-star"></i> Social Proof
+                  </div>
+                  <p class="text-[11px] text-slate-400">Las reseñas comunitarias pesan más que el eslogan publicitario.</p>
+                </div>
+                <div class="p-3 bg-slate-900 rounded-xl border border-slate-800">
+                  <div class="text-amber-400 font-bold mb-1 flex items-center gap-1.5">
+                    <i class="fa-solid fa-store"></i> Showrooming
+                  </div>
+                  <p class="text-[11px] text-slate-400">Toca el producto en la tienda física pero lo compra más barato en la web.</p>
+                </div>
+                <div class="p-3 bg-slate-900 rounded-xl border border-slate-800">
+                  <div class="text-cyan-400 font-bold mb-1 flex items-center gap-1.5">
+                    <i class="fa-solid fa-laptop"></i> Webrooming
+                  </div>
+                  <p class="text-[11px] text-slate-400">Investiga horas en la web y luego acude a la tienda física a comprarlo al instante.</p>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- CIBERSEGURIDAD COMERCIAL Y ÉTICA DE DATOS -->
+          <div class="glass-card rounded-2xl p-6 border-l-4 border-l-rose-500">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-[10px] font-mono uppercase tracking-wider text-rose-400 font-bold">Protección Activa de Activos</span>
+              <span class="px-2 py-0.5 rounded bg-rose-500/20 text-rose-300 text-[10px] font-bold">CIBERSEGURIDAD EN MARKETING</span>
+            </div>
+            <h3 class="font-display font-bold text-white text-lg">Confianza Digital: Tríada CIA y Mitigación de Fraude</h3>
+            <p class="text-xs text-slate-400 mt-1 mb-4">La seguridad no es solo de IT: si filtran los datos de tus clientes, la reputación comercial muere.</p>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+              <div class="p-3.5 bg-slate-900 rounded-xl border border-slate-800">
+                <span class="font-mono font-bold text-rose-400 block text-[11px]">TRÍADA CIA</span>
+                <p class="text-[11px] text-slate-400 mt-1">
+                  • <strong>Confidencialidad:</strong> Solo ojos autorizados leen la data.<br>
+                  • <strong>Integridad:</strong> Datos de compras inalterables.<br>
+                  • <strong>Disponibilidad:</strong> Tu pasarela de pagos debe estar 99.9% arriba.
+                </p>
+              </div>
+
+              <div class="p-3.5 bg-slate-900 rounded-xl border border-slate-800">
+                <span class="font-mono font-bold text-amber-400 block text-[11px]">VECTORES CRÍTICOS</span>
+                <p class="text-[11px] text-slate-400 mt-1">
+                  • <strong>Phishing:</strong> Suplantación de identidad para robar cuentas de anuncios.<br>
+                  • <strong>Ransomware:</strong> Secuestro de bases de datos de clientes CRM.<br>
+                  • Mitigación: Autenticación multifactor (MFA obligatoria).
+                </p>
+              </div>
+
+              <div class="p-3.5 bg-slate-900 rounded-xl border border-slate-800">
+                <span class="font-mono font-bold text-emerald-400 block text-[11px]">ÉTICA Y PRIVACIDAD</span>
+                <p class="text-[11px] text-slate-400 mt-1">
+                  Consentimiento explícito de cookies, modelos algorítmicos imparciales sin sesgo discriminatorio y cumplimiento estricto de leyes de protección de datos personales.
+                </p>
+              </div>
+            </div>
+          </div>
+        `,
+        roleplay: {
+          title: "El Hackeo del Carnaval: Simulación de Crisis",
+          subtitle: "Gabinete de crisis de ciberseguridad y marketing B2C",
+          desc: "A 48 horas de la fiesta del Carnaval de Oruro, una pasarela de boletos y hospedajes sufre una vulnerabilidad: se filtraron 1,500 números de teléfono y los usuarios están recibiendo mensajes SMS falsos exigiendo transferencias adicionales a cuentas no identificadas.",
+          tasks: [
+            "1. Redactar el comunicado de contención aplicando la mitigación de disonancia y pánico.",
+            "2. Establecer el protocolo de la Tríada CIA vulnerado.",
+            "3. Diseñar la estrategia de recuperación de confianza de cara a los clientes afectados."
+          ],
+          timerMinutes: 20
+        },
+        glossary: [
+          { es: "Comportamiento del Consumidor", en: "Consumer Behavior", def: "Estudio de cómo individuos y organizaciones seleccionan, compran y usan bienes para satisfacer necesidades." },
+          { es: "Factores Socioculturales", en: "Sociocultural Factors", def: "Influencias del entorno social, tradiciones, roles familiares y estatus socioeconómico en las decisiones." },
+          { es: "Mercados B2B y B2C", en: "B2B and B2C Markets", def: "Diferenciación entre compras corporativas racionales versus compras de consumo individual impulsivas." },
+          { es: "Disonancia Cognitiva", en: "Cognitive Dissonance", def: "Tensión psicológica post-compra cuando el cliente duda sobre si tomó la decisión de gasto correcta." },
+          { es: "Puntos de Contacto", en: "Touchpoints", def: "Cualquier momento de interacción directa o indirecta entre el consumidor y la marca a lo largo del viaje." },
+          { es: "Prueba Social", en: "Social Proof", def: "Fenómeno psicológico donde las personas copian las acciones de otros asumiendo que es la conducta correcta." },
+          { es: "Privacidad de Datos", en: "Data Privacy", def: "Derecho fundamental del usuario a controlar cómo se recopila y utiliza su información personal online." },
+          { es: "Suplantación de Identidad", en: "Phishing", def: "Técnica delictiva de ingeniería social para engañar a usuarios y robar contraseñas o tarjetas." },
+          { es: "Comercio Minorista Omnicanal", en: "Omnichannel Retail", def: "Estrategia integral donde todos los canales convergen para una compra fluida y sin interrupciones." }
+        ],
+        quiz: [
+          {
+            q: "La 'Disonancia Cognitiva' en el embudo de conversión ocurre fundamentalmente en la fase de:",
+            options: [
+              "Reconocimiento de la necesidad",
+              "Búsqueda activa de información",
+              "Evaluación de alternativas",
+              "Post-compra"
+            ],
+            correct: 3,
+            feedback: "¡Exacto! Ocurre después de pagar, cuando el cliente siente ansiedad o duda sobre su compra. El marketing post-venta debe mitigarla para consolidar la lealtad."
+          },
+          {
+            q: "¿Cuál es la diferencia entre 'Showrooming' y 'Webrooming'?",
+            options: [
+              "Showrooming es ver en tienda física y comprar online; Webrooming es investigar online y comprar en tienda física",
+              "Showrooming es comprar solo en ferias de streaming de Twitch",
+              "No tienen diferencia, son dos términos para e-commerce",
+              "Webrooming es hackear bases de datos de competidores"
+            ],
+            correct: 0,
+            feedback: "¡Perfecto! En Showrooming la tienda física es solo una vitrina; en Webrooming internet sirve como catálogo de investigación antes de la compra física."
+          },
+          {
+            q: "En ciberseguridad comercial, la Tríada 'CIA' representa:",
+            options: [
+              "Compras, Inversión y Automatización",
+              "Confidencialidad, Integridad y Disponibilidad",
+              "Clientes, Intermediarios y Agencias",
+              "Costo, Ingreso y Adquisición"
+            ],
+            correct: 1,
+            feedback: "¡Correcto! Confidencialidad (datos privados), Integridad (datos precisos no alterados) y Disponibilidad (servidores funcionando 24/7)."
+          }
+        ]
+      },
+
+      4: {
+        id: 4,
+        badge: "TEMA 4 • INGENIERÍA DE MERCADOS",
+        title: "Segmentación y Posicionamiento de Mercado",
+        subtitle: "Variables demográficas y psicográficas, Cobertura, el Filtro MASDA, Mapa Perceptual y segmentación con algoritmos de IA.",
+        readTime: "9 min de estudio activo",
+        checkpoints: [
+          "Variables Objetivas vs Motor Oculto (Psicografía)",
+          "Estrategias de Cobertura (Masivo, Diferenciado, Concentrado, Micro)",
+          "El Filtro MASDA (Medible, Accesible, Sustancial, Diferenciable, Accionable)",
+          "Mapa Perceptual y Propuesta de Valor"
+        ],
+        theoryHtml: `
+          <!-- VARIABLES DE SEGMENTACIÓN (Miller's Law - 4 cuadrantes) -->
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            
+            <div class="glass-card rounded-2xl p-5 border-t-2 border-t-indigo-500">
+              <span class="text-[10px] font-mono text-indigo-400 font-bold uppercase">Datos Objetivos 1</span>
+              <h3 class="font-display font-bold text-white text-base mt-1">Geográfica</h3>
+              <p class="text-xs text-slate-400 mt-2">
+                Ubicación, región (Altiplano vs Valles vs Trópico), clima extremo, densidad poblacional urbana vs rural y dispersión geográfica.
+              </p>
+            </div>
+
+            <div class="glass-card rounded-2xl p-5 border-t-2 border-t-cyan-400">
+              <span class="text-[10px] font-mono text-cyan-400 font-bold uppercase">Datos Objetivos 2</span>
+              <h3 class="font-display font-bold text-white text-base mt-1">Demográfica</h3>
+              <p class="text-xs text-slate-400 mt-2">
+                Edad generacional (Gen Z, Millennials, Boomers), nivel de ingresos, ocupación, nivel formativo, género y tamaño de la unidad familiar.
+              </p>
+            </div>
+
+            <div class="glass-card rounded-2xl p-5 border-t-2 border-t-amber-400">
+              <span class="text-[10px] font-mono text-amber-400 font-bold uppercase">Motor Oculto 1</span>
+              <h3 class="font-display font-bold text-white text-base mt-1">Psicográfica</h3>
+              <p class="text-xs text-slate-400 mt-2">
+                Valores compartidos, estilo de vida, aspiraciones, creencias religiosas/culturales y necesidad de pertenencia social o estatus.
+              </p>
+            </div>
+
+            <div class="glass-card rounded-2xl p-5 border-t-2 border-t-emerald-400">
+              <span class="text-[10px] font-mono text-emerald-400 font-bold uppercase">Motor Oculto 2</span>
+              <h3 class="font-display font-bold text-white text-base mt-1">Conductual</h3>
+              <p class="text-xs text-slate-400 mt-2">
+                Tasa de uso del producto, nivel de lealtad a la marca, beneficios específicos buscados y ocasiones especiales de consumo (ej. festividades).
+              </p>
+            </div>
+
+          </div>
+
+          <!-- COBERTURA DE MERCADO -->
+          <div class="glass-card rounded-2xl p-6">
+            <span class="text-[10px] font-mono uppercase tracking-wider text-purple-400 font-bold">Selección Estratégica de Objetivos</span>
+            <h3 class="font-display font-bold text-white text-lg mt-1">Estrategias de Cobertura de Mercado</h3>
+            <p class="text-xs text-slate-400 mt-1 mb-4">¿A cuántos segmentos atacará tu corporación?</p>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-xs">
+              <div class="p-3.5 bg-slate-900 rounded-xl border border-slate-800">
+                <span class="font-bold text-indigo-400 font-mono block">1. Indiferenciado (Masivo)</span>
+                <p class="text-[11px] text-slate-400 mt-1">Un solo producto y una sola oferta para todo el mercado (ej. sal de mesa básica). En extinción hoy en día.</p>
+              </div>
+              <div class="p-3.5 bg-slate-900 rounded-xl border border-slate-800">
+                <span class="font-bold text-cyan-400 font-mono block">2. Diferenciado (Segmentado)</span>
+                <p class="text-[11px] text-slate-400 mt-1">Diferentes productos diseñados a la medida para múltiples segmentos (ej. Coca-Cola Original, Zero, Light).</p>
+              </div>
+              <div class="p-3.5 bg-slate-900 rounded-xl border border-slate-800">
+                <span class="font-bold text-amber-400 font-mono block">3. Concentrado (Nicho)</span>
+                <p class="text-[11px] text-slate-400 mt-1">Dominio absoluto de un subsegmento especializado de alta rentabilidad (ej. software para ingenieros mineros).</p>
+              </div>
+              <div class="p-3.5 bg-slate-900 rounded-xl border border-slate-800">
+                <span class="font-bold text-emerald-400 font-mono block">4. Micromarketing</span>
+                <p class="text-[11px] text-slate-400 mt-1">Personalización hiperlocal o uno a uno (1:1) adaptado a barrios o perfiles individuales con algoritmos.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- EL FILTRO MASDA (REQUISITOS DE UN SEGMENTO EFICAZ) -->
+          <div class="glass-card rounded-2xl p-6 border-l-4 border-l-amber-400">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-[10px] font-mono uppercase tracking-wider text-amber-400 font-bold">Validación Rigurosa</span>
+              <button onclick="switchSubView('simulator')" class="px-2.5 py-1 rounded-lg bg-amber-500/20 text-amber-300 border border-amber-500/30 text-xs font-semibold hover:bg-amber-500/30 transition-all flex items-center gap-1.5">
+                <i class="fa-solid fa-play"></i> Probar Validador MASDA
+              </button>
+            </div>
+            <h3 class="font-display font-bold text-white text-lg">El Filtro M.A.S.D.A.</h3>
+            <p class="text-xs text-slate-400 mt-1 mb-4">No todo grupo de personas es un segmento viable. Debe aprobar obligatoriamente los 5 filtros:</p>
+
+            <div class="grid grid-cols-1 sm:grid-cols-5 gap-3 text-xs font-mono">
+              <div class="p-3 bg-slate-900 rounded-xl border border-slate-800 text-center">
+                <span class="text-2xl font-black text-amber-400 block">M</span>
+                <span class="font-bold text-white block text-xs mt-1">Medible</span>
+                <span class="text-[10px] text-slate-400 font-sans block mt-1">Tamaño y poder adquisitivo cuantificables en números reales.</span>
+              </div>
+              <div class="p-3 bg-slate-900 rounded-xl border border-slate-800 text-center">
+                <span class="text-2xl font-black text-cyan-400 block">A</span>
+                <span class="font-bold text-white block text-xs mt-1">Accesible</span>
+                <span class="text-[10px] text-slate-400 font-sans block mt-1">Alcanzable mediante canales de comunicación y logística reales.</span>
+              </div>
+              <div class="p-3 bg-slate-900 rounded-xl border border-slate-800 text-center">
+                <span class="text-2xl font-black text-emerald-400 block">S</span>
+                <span class="font-bold text-white block text-xs mt-1">Sustancial</span>
+                <span class="text-[10px] text-slate-400 font-sans block mt-1">Suficientemente grande o rentable como para justificar inversión.</span>
+              </div>
+              <div class="p-3 bg-slate-900 rounded-xl border border-slate-800 text-center">
+                <span class="text-2xl font-black text-purple-400 block">D</span>
+                <span class="font-bold text-white block text-xs mt-1">Diferenciable</span>
+                <span class="text-[10px] text-slate-400 font-sans block mt-1">Responde de forma distinta a estímulos de marketing que otros.</span>
+              </div>
+              <div class="p-3 bg-slate-900 rounded-xl border border-slate-800 text-center">
+                <span class="text-2xl font-black text-rose-400 block">A</span>
+                <span class="font-bold text-white block text-xs mt-1">Accionable</span>
+                <span class="text-[10px] text-slate-400 font-sans block mt-1">La empresa tiene recursos y capacidad técnica para atenderlos.</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- POSICIONAMIENTO & MAPA PERCEPTUAL INTERACTIVO -->
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            
+            <!-- Explicación del Mapa Perceptual -->
+            <div class="glass-card rounded-2xl p-6">
+              <span class="text-[10px] font-mono uppercase tracking-wider text-cyan-400 font-bold">Espacio Mental</span>
+              <h3 class="font-display font-bold text-white text-lg mt-1">Posicionamiento & Propuesta de Valor</h3>
+              <p class="text-xs text-slate-400 mt-1 mb-3">
+                El posicionamiento es el lugar distintivo que ocupa el producto en la mente de los consumidores respecto a los competidores.
+              </p>
+              
+              <div class="p-3.5 bg-slate-900 rounded-xl border border-slate-800 text-xs space-y-2">
+                <div class="text-indigo-300 font-semibold flex items-center gap-2">
+                  <i class="fa-solid fa-gem text-indigo-400"></i> Propuesta "Más por Más":
+                </div>
+                <p class="text-[11px] text-slate-400">
+                  Entregar beneficios de calidad superior a cambio de un precio premium (ej. Apple, Tesla, calzados industriales alemanes con certificación triple).
+                </p>
+                <div class="text-emerald-300 font-semibold flex items-center gap-2 pt-1">
+                  <i class="fa-solid fa-crosshairs text-emerald-400"></i> Detección de Espacios Vacíos:
+                </div>
+                <p class="text-[11px] text-slate-400">
+                  El objetivo del mapa es hallar cuadrantes desatendidos con alta demanda y nula competencia de calidad.
+                </p>
+              </div>
+
+              <!-- Segmentación con IA -->
+              <div class="mt-4 p-3 rounded-xl bg-purple-950/30 border border-purple-500/30 text-xs">
+                <span class="font-bold text-purple-300 font-mono text-[10px] block">SEGMENTACIÓN CON IA & CLUSTERING</span>
+                <p class="text-[11px] text-slate-300 mt-1">
+                  Algoritmos como K-Means agrupan a miles de usuarios en tiempo real según micro-patrones de clics, compras y horarios sin depender de encuestas manuales.
+                </p>
+              </div>
+            </div>
+
+            <!-- Visualizador del Mapa Perceptual (Ejes Cartesianos) -->
+            <div class="glass-card rounded-2xl p-6 flex flex-col justify-between">
+              <div>
+                <div class="flex items-center justify-between mb-2">
+                  <span class="text-[10px] font-mono uppercase tracking-wider text-indigo-400 font-bold">Visualizador 2D</span>
+                  <span class="text-[10px] font-mono text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/30">Oportunidad Detectada</span>
+                </div>
+                <h4 class="font-display font-bold text-white text-sm">Mapa Perceptual: Calidad vs. Precio</h4>
+              </div>
+
+              <!-- Gráfico Cartesiano SVG Estilizado -->
+              <div class="my-3 p-4 bg-slate-950 rounded-xl border border-slate-800 relative h-64 flex items-center justify-center overflow-hidden">
+                
+                <!-- Cuadrante de Oportunidad Glow -->
+                <div class="absolute top-2 right-2 w-1/2 h-1/2 bg-emerald-500/10 border border-dashed border-emerald-500/40 rounded-xl flex items-start justify-end p-2 pointer-events-none">
+                  <span class="text-[9px] font-mono font-bold text-emerald-400 bg-emerald-950/80 px-1.5 py-0.5 rounded border border-emerald-500/30">
+                    ★ Cuadrante de Oportunidad
+                  </span>
+                </div>
+
+                <!-- Eje Y: Calidad -->
+                <div class="absolute top-2 left-1/2 -translate-x-1/2 text-[10px] font-mono text-cyan-400 font-bold bg-slate-900/90 px-2 py-0.5 rounded border border-slate-800">
+                  ▲ Calidad Premium
+                </div>
+                <div class="absolute bottom-2 left-1/2 -translate-x-1/2 text-[10px] font-mono text-slate-500 font-bold bg-slate-900/90 px-2 py-0.5 rounded border border-slate-800">
+                  ▼ Calidad Básica
+                </div>
+                <div class="absolute inset-y-8 left-1/2 w-[1px] bg-slate-800"></div>
+
+                <!-- Eje X: Precio -->
+                <div class="absolute left-2 top-1/2 -translate-y-1/2 text-[10px] font-mono text-slate-500 font-bold bg-slate-900/90 px-2 py-0.5 rounded border border-slate-800">
+                  ◀ Económico
+                </div>
+                <div class="absolute right-2 top-1/2 -translate-y-1/2 text-[10px] font-mono text-amber-400 font-bold bg-slate-900/90 px-2 py-0.5 rounded border border-slate-800">
+                  Alto Precio ▶
+                </div>
+                <div class="absolute inset-x-8 top-1/2 h-[1px] bg-slate-800"></div>
+
+                <!-- Puntos de Marcas Competidoras -->
+                <div class="absolute top-1/3 left-1/4 transform -translate-x-1/2 -translate-y-1/2 group cursor-pointer">
+                  <div class="w-4 h-4 rounded-full bg-rose-500 border-2 border-white flex items-center justify-center text-[8px] font-bold text-white shadow-lg">A</div>
+                  <span class="text-[9px] text-slate-400 hidden group-hover:block absolute top-5 -left-4 bg-slate-900 px-1.5 py-0.5 rounded border border-slate-700 whitespace-nowrap">Marca A (Bajo precio, calidad media)</span>
+                </div>
+
+                <div class="absolute bottom-1/4 left-1/3 transform -translate-x-1/2 -translate-y-1/2 group cursor-pointer">
+                  <div class="w-4 h-4 rounded-full bg-amber-500 border-2 border-white flex items-center justify-center text-[8px] font-bold text-white shadow-lg">B</div>
+                  <span class="text-[9px] text-slate-400 hidden group-hover:block absolute top-5 -left-4 bg-slate-900 px-1.5 py-0.5 rounded border border-slate-700 whitespace-nowrap">Marca B (Económico masivo)</span>
+                </div>
+
+                <div class="absolute top-1/4 right-1/4 transform -translate-x-1/2 -translate-y-1/2 group cursor-pointer">
+                  <div class="w-5 h-5 rounded-full bg-indigo-500 border-2 border-cyan-400 flex items-center justify-center text-[9px] font-bold text-white shadow-glow-indigo animate-bounce">
+                    ★
+                  </div>
+                  <span class="text-[9px] text-cyan-300 font-bold block absolute -top-5 -left-8 bg-slate-900 px-1.5 py-0.5 rounded border border-cyan-500/50 whitespace-nowrap">Tu Empresa (Nicho Minero)</span>
+                </div>
+
+              </div>
+
+              <div class="text-[11px] text-slate-400 flex items-center justify-between">
+                <span>Caso: Logística Trans-Pacífico (Quinua Real Gourmet)</span>
+                <span class="text-emerald-400 font-mono font-bold">Liderazgo en Nicho</span>
+              </div>
+            </div>
+
+          </div>
+        `,
+        roleplay: {
+          title: "Batalla del Mapa Perceptual",
+          subtitle: "Dinámica de construcción de nicho con filtro MASDA",
+          desc: "Tu equipo debe posicionar una nueva marca de snack proteico de Quinua Real de Oruro frente a gigantes multinacionales de galletas y golosinas masivas.",
+          tasks: [
+            "1. Definir los dos ejes del mapa perceptual que te permitan aislarte de la guerra de precios.",
+            "2. Validar con el filtro MASDA que el segmento de deportistas y ejecutivos sea viable.",
+            "3. Redactar una propuesta de valor de una frase con el esquema 'Más por Más'."
+          ],
+          timerMinutes: 20
+        },
+        glossary: [
+          { es: "Segmentación de Mercado", en: "Market Segmentation", def: "División del mercado total heterogéneo en subgrupos homogéneos con necesidades similares." },
+          { es: "Variables Demográficas", en: "Demographic Variables", def: "Características cuantificables de la población como edad, sexo, ingresos, educación y ocupación." },
+          { es: "Variables Psicográficas y Conductuales", en: "Psychographic & Behavioral Variables", def: "Aspectos de estilo de vida, valores personales, ocasión de uso y lealtad a la marca." },
+          { es: "Marketing de Nicho", en: "Niche Marketing", def: "Estrategia concentrada en atender un subsegmento pequeño pero altamente rentable y especializado." },
+          { es: "Mercado Objetivo", en: "Target Market", def: "Segmento específico al que la empresa dirige todas sus estrategias de producto y precio." },
+          { es: "Mapa Perceptual", en: "Perceptual Map", def: "Gráfico cartesiano que muestra cómo los consumidores perciben diferentes marcas en atributos clave." },
+          { es: "Propuesta de Valor", en: "Value Proposition", def: "La razón fundamental por la cual un cliente compra: el conjunto de soluciones y alivios que entrega." },
+          { es: "Algoritmos de Agrupamiento", en: "Clustering Algorithms", def: "Técnicas de machine learning (como K-Means) que detectan segmentos de clientes automáticamente." },
+          { es: "Ventaja Competitiva", en: "Competitive Advantage", def: "Diferenciador superior que hace a la empresa preferida frente a sustitutos." },
+          { es: "Público Objetivo", en: "Target Audience", def: "Audiencia concreta a la cual se orienta un mensaje publicitario o campaña particular." }
+        ],
+        quiz: [
+          {
+            q: "¿Qué requisito del Filtro MASDA exige que un segmento genere suficiente rentabilidad para justificar la inversión?",
+            options: [
+              "M - Medible",
+              "A - Accesible",
+              "S - Sustancial",
+              "D - Diferenciable"
+            ],
+            correct: 2,
+            feedback: "¡Correcto! 'Sustancial' significa que el mercado tiene el volumen de ventas o margen necesario para que sea un negocio rentable."
+          },
+          {
+            q: "Si una empresa orureña decide vender únicamente un software especializado para optimizar camiones de transporte de mineral, su estrategia de cobertura es:",
+            options: [
+              "Masiva o Indiferenciada",
+              "Concentrada o de Nicho",
+              "Diferenciada global",
+              "Micromarketing individual"
+            ],
+            correct: 1,
+            feedback: "¡Excelente! Se enfoca al 100% en un nicho industrial específico donde posee una ventaja competitiva de alto valor."
+          },
+          {
+            q: "En un mapa perceptual, ¿qué representa un 'espacio vacío' desatendido?",
+            options: [
+              "Un sector donde está prohibido legalmente vender",
+              "Una combinación de atributos demandada por los clientes que ningún competidor está satisfaciendo actualmente",
+              "Un producto defectuoso devuelto por los clientes",
+              "Una tienda física abandonada en el centro de la ciudad"
+            ],
+            correct: 1,
+            feedback: "¡Brillante! Los espacios vacíos son minas de oro para emprendedores e ingenieros comerciales porque representan oportunidades de diferenciación sin guerra de precios."
+          }
+        ]
+      },
+
+      5: {
+        id: 5,
+        badge: "TEMA 5 • EVOLUCIÓN DIGITAL",
+        title: "El Mix de Marketing en la Era Híbrida",
+        subtitle: "Las 4Ps clásicas vs digitales, costo marginal cero, precios dinámicos, omnicanalidad y métricas de rentabilidad (CAC vs LTV).",
+        readTime: "10 min de estudio activo",
+        checkpoints: [
+          "Las 4Ps Clásicas (Producto, Precio, Plaza, Promoción)",
+          "Convergencia y Costo Marginal Cero (Zero Marginal Cost)",
+          "Modelos de Monetización y Precios Dinámicos",
+          "Métricas Críticas: CAC, LTV y Calculadora de ROI"
+        ],
+        theoryHtml: `
+          <!-- LAS 4PS CLÁSICAS (Miller's Law - 4 Bento Cards) -->
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            
+            <div class="glass-card rounded-2xl p-5 border-t-2 border-t-indigo-500">
+              <div class="w-9 h-9 rounded-xl bg-indigo-500/10 text-indigo-400 flex items-center justify-center mb-3">
+                <i class="fa-solid fa-box text-base"></i>
+              </div>
+              <span class="text-[10px] font-mono uppercase tracking-wider text-indigo-400 font-bold">1P • PRODUCTO</span>
+              <h3 class="font-display font-bold text-white text-base mt-1">Combinación de Valor</h3>
+              <p class="text-xs text-slate-400 mt-2 leading-relaxed">
+                Variedad, calidad intrínseca, diseño, características funcionales, empaque, servicios post-venta y branding de marca.
+              </p>
+            </div>
+
+            <div class="glass-card rounded-2xl p-5 border-t-2 border-t-emerald-400">
+              <div class="w-9 h-9 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center mb-3">
+                <i class="fa-solid fa-tag text-base"></i>
+              </div>
+              <span class="text-[10px] font-mono uppercase tracking-wider text-emerald-400 font-bold">2P • PRECIO</span>
+              <h3 class="font-display font-bold text-white text-base mt-1">Captura Financiera</h3>
+              <p class="text-xs text-slate-400 mt-2 leading-relaxed">
+                Precio de lista, descuentos por volumen, bonificaciones, plazos de pago y condiciones de financiamiento o crédito comercial.
+              </p>
+            </div>
+
+            <div class="glass-card rounded-2xl p-5 border-t-2 border-t-cyan-400">
+              <div class="w-9 h-9 rounded-xl bg-cyan-500/10 text-cyan-400 flex items-center justify-center mb-3">
+                <i class="fa-solid fa-location-dot text-base"></i>
+              </div>
+              <span class="text-[10px] font-mono uppercase tracking-wider text-cyan-400 font-bold">3P • PLAZA</span>
+              <h3 class="font-display font-bold text-white text-base mt-1">Disponibilidad Total</h3>
+              <p class="text-xs text-slate-400 mt-2 leading-relaxed">
+                Canales de distribución, cobertura geográfica, inventarios en almacén, logística de transporte y última milla.
+              </p>
+            </div>
+
+            <div class="glass-card rounded-2xl p-5 border-t-2 border-t-purple-400">
+              <div class="w-9 h-9 rounded-xl bg-purple-500/10 text-purple-400 flex items-center justify-center mb-3">
+                <i class="fa-solid fa-bullhorn text-base"></i>
+              </div>
+              <span class="text-[10px] font-mono uppercase tracking-wider text-purple-400 font-bold">4P • PROMOCIÓN</span>
+              <h3 class="font-display font-bold text-white text-base mt-1">Comunicación 360°</h3>
+              <p class="text-xs text-slate-400 mt-2 leading-relaxed">
+                Publicidad digital, ventas personales, promociones de ventas directas, relaciones públicas e Inbound marketing.
+              </p>
+            </div>
+
+          </div>
+
+          <!-- EVOLUCIÓN: 4PS TRADICIONALES VS DIGITALES & CONVERGENCIA -->
+          <div class="glass-card rounded-2xl p-6">
+            <span class="text-[10px] font-mono uppercase tracking-wider text-cyan-400 font-bold">Transformación Tecnológica</span>
+            <h3 class="font-display font-bold text-white text-lg mt-1">Evolución de las 4Ps: Hacia la Era Híbrida</h3>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4 text-xs">
+              
+              <div class="p-4 rounded-xl bg-slate-900 border border-slate-800">
+                <span class="font-mono text-indigo-400 font-bold text-[11px] block">CONVERGENCIA DEL PRODUCTO</span>
+                <p class="text-slate-300 mt-1.5 leading-relaxed text-[11px]">
+                  • <strong>Tangibles:</strong> Costo por unidad, almacenamiento y logística pesada.<br>
+                  • <strong>Digitales:</strong> <span class="text-cyan-300 font-semibold">Costo Marginal Cero</span> (copiar y distribuir software o cursos cuesta $0 adicionales).<br>
+                  • <strong>Híbridos:</strong> Hardware físico potenciado por telemetría y software en la nube.
+                </p>
+              </div>
+
+              <div class="p-4 rounded-xl bg-slate-900 border border-slate-800">
+                <span class="font-mono text-emerald-400 font-bold text-[11px] block">PRECIO: MODELOS DE MONETIZACIÓN</span>
+                <p class="text-slate-300 mt-1.5 leading-relaxed text-[11px]">
+                  • <strong>Precios Dinámicos (Dynamic Pricing):</strong> Algoritmos ajustan tarifas según oferta/demanda.<br>
+                  • <strong>Freemium:</strong> Entrada gratis; monetización de funciones PRO.<br>
+                  • <strong>Suscripción recurrente:</strong> Ingresos mensuales predecibles.<br>
+                  • <strong>Pay-per-use:</strong> Pago por consumo real exacto.
+                </p>
+              </div>
+
+              <div class="p-4 rounded-xl bg-slate-900 border border-slate-800 col-span-1 md:col-span-2 lg:col-span-1">
+                <span class="font-mono text-purple-400 font-bold text-[11px] block">OMNICANALIDAD REAL (PLAZA)</span>
+                <p class="text-slate-300 mt-1.5 leading-relaxed text-[11px]">
+                  Multicanalidad es tener muchos canales aislados. <strong class="text-white">Omnicanalidad</strong> es sincronizar en tiempo real el inventario del almacén con la tienda física, la app móvil, el POS y las redes sociales con cero fricción.
+                </p>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- FRONTERA TECNOLÓGICA & PROMOCIÓN 360 -->
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            
+            <div class="glass-card rounded-2xl p-6">
+              <span class="text-[10px] font-mono uppercase tracking-wider text-amber-400 font-bold">Tecnologías Exponenciales</span>
+              <h3 class="font-display font-bold text-white text-lg mt-1">IA, Realidad Aumentada & Agentes Autónomos</h3>
+              
+              <div class="space-y-3 mt-4 text-xs">
+                <div class="p-3 bg-slate-900 rounded-xl border border-slate-800 flex items-start gap-3">
+                  <div class="w-8 h-8 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center shrink-0 text-sm">
+                    <i class="fa-solid fa-vr-cardboard"></i>
+                  </div>
+                  <div>
+                    <span class="font-bold text-white block">Realidad Aumentada & Virtual (AR/VR)</span>
+                    <span class="text-[11px] text-slate-400">Demostración remota de maquinarias mineras e industriales pesadas sin trasladar equipos físicos.</span>
+                  </div>
+                </div>
+
+                <div class="p-3 bg-slate-900 rounded-xl border border-slate-800 flex items-start gap-3">
+                  <div class="w-8 h-8 rounded-lg bg-cyan-500/20 text-cyan-400 flex items-center justify-center shrink-0 text-sm">
+                    <i class="fa-solid fa-robot"></i>
+                  </div>
+                  <div>
+                    <span class="font-bold text-white block">Chatbots PNL & Agentes de IA</span>
+                    <span class="text-[11px] text-slate-400">Atención 24/7 en lenguaje natural que califica leads y cierra transacciones sin intervención humana.</span>
+                  </div>
+                </div>
+
+                <div class="p-3 bg-slate-900 rounded-xl border border-slate-800 flex items-start gap-3">
+                  <div class="w-8 h-8 rounded-lg bg-purple-500/20 text-purple-400 flex items-center justify-center shrink-0 text-sm">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i>
+                  </div>
+                  <div>
+                    <span class="font-bold text-white block">Diseño Generativo & Hiper-Personalización</span>
+                    <span class="text-[11px] text-slate-400">Generación de ofertas y creatividades publicitarias en milisegundos basadas en el historial del usuario.</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Unit Economics: CAC vs LTV -->
+            <div class="glass-card rounded-2xl p-6 border-l-4 border-l-emerald-400">
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-[10px] font-mono uppercase tracking-wider text-emerald-400 font-bold">Métricas de Rentabilidad Real</span>
+                <button onclick="switchSubView('simulator')" class="px-2.5 py-1 rounded-lg bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-xs font-semibold hover:bg-emerald-500/30 transition-all flex items-center gap-1.5">
+                  <i class="fa-solid fa-calculator"></i> Abrir Calculadora
+                </button>
+              </div>
+              <h3 class="font-display font-bold text-white text-lg">Unit Economics: "El ROI No Miente"</h3>
+              <p class="text-xs text-slate-400 mt-1 mb-4">Ningún negocio sobrevive sin equilibrio positivo entre lo que cuesta captar un cliente y lo que gasta en su vida útil.</p>
+
+              <div class="space-y-3 text-xs">
+                <div class="p-3 bg-slate-900 rounded-xl border border-slate-800 flex items-center justify-between">
+                  <div>
+                    <span class="font-mono font-bold text-indigo-400 block text-xs">CAC (Costo de Adquisición de Clientes)</span>
+                    <span class="text-[10px] text-slate-400">Total inversión en marketing y ventas ÷ Clientes nuevos conseguidos.</span>
+                  </div>
+                  <span class="text-sm font-mono font-bold text-white">$15 base</span>
+                </div>
+
+                <div class="p-3 bg-slate-900 rounded-xl border border-slate-800 flex items-center justify-between">
+                  <div>
+                    <span class="font-mono font-bold text-emerald-400 block text-xs">LTV / CLTV (Customer Lifetime Value)</span>
+                    <span class="text-[10px] text-slate-400">Ingreso promedio generado por un cliente durante toda su relación con la marca.</span>
+                  </div>
+                  <span class="text-sm font-mono font-bold text-emerald-400">$450 base</span>
+                </div>
+
+                <div class="p-3 bg-gradient-to-r from-slate-900 to-indigo-950/60 rounded-xl border border-indigo-500/30 flex items-center justify-between">
+                  <div>
+                    <span class="font-mono font-bold text-cyan-300 block text-xs">Regla de Oro: Ratio LTV : CAC ≥ 3:1</span>
+                    <span class="text-[10px] text-slate-300">Si ganas $3 o más por cada $1 invertido en adquisición, el modelo es altamente escalable.</span>
+                  </div>
+                  <span class="text-xs font-mono font-bold px-2 py-1 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">30:1 Saludable</span>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        `,
+        roleplay: {
+          title: "Laboratorio de Innovación: 4Ps Híbridas",
+          subtitle: "Ingeniería de producto y monetización de un modelo industrial",
+          desc: "Una fábrica de filtros industriales de agua para comunidades altiplánicas vende sus equipos en una sola transacción a $200 y luego pierde contacto con el cliente.",
+          tasks: [
+            "1. Transformar el producto físico en un bien híbrido con sensores IoT de bajo costo.",
+            "2. Diseñar un modelo de monetización recurrente por suscripción de repuestos.",
+            "3. Calcular el nuevo LTV proyectado frente al modelo tradicional."
+          ],
+          timerMinutes: 20
+        },
+        glossary: [
+          { es: "Mix de Marketing", en: "Marketing Mix", def: "Conjunto de herramientas tácticas controlables (4Ps) que la empresa combina para producir la respuesta deseada en el mercado." },
+          { es: "Tradicional vs Digital", en: "Traditional vs. Digital", def: "Transición de la comercialización física analógica a modelos basados en software y datos." },
+          { es: "Costo Marginal Cero", en: "Zero Marginal Cost", def: "Fenómeno digital donde reproducir y distribuir una unidad adicional de software o contenido no cuesta casi nada." },
+          { es: "IA Generativa", en: "Generative AI", def: "Algoritmos capaces de crear imágenes, textos y ofertas comerciales hiper-personalizadas en tiempo real." },
+          { es: "Precios Dinámicos", en: "Dynamic Pricing", def: "Ajuste continuo y automatizado del precio según la demanda, hora, inventario y perfil del usuario." },
+          { es: "Omnicanalidad", en: "Omnichannel", def: "Integración perfecta de todos los canales de venta e inventario físicos y virtuales en una base de datos central." },
+          { es: "Segmentación de Mercado", en: "Market Segmentation", def: "Clasificación de clientes según atributos afines para enfocar el esfuerzo de las 4Ps." },
+          { es: "Realidad Aumentada", en: "Augmented Reality (AR)", def: "Superposición de información o modelos 3D virtuales sobre el entorno físico real." },
+          { es: "Valor de Vida del Cliente", en: "Customer Lifetime Value (CLTV)", def: "Margen financiero neto total que un consumidor deja a la corporación a lo largo de su historial de compra." },
+          { es: "Taller de Innovación", en: "Innovation Workshop", def: "Sesión práctica de reingeniería de propuestas de valor y experimentación ágil." }
+        ],
+        quiz: [
+          {
+            q: "El concepto de 'Costo Marginal Cero' en productos digitales se refiere a que:",
+            options: [
+              "El producto se regala gratis a todo el mundo por siempre",
+              "Producir y distribuir una copia adicional del producto tiene un costo prácticamente nulo",
+              "Los sueldos de los ingenieros de software son de cero dólares",
+              "No se pagan impuestos en internet"
+            ],
+            correct: 1,
+            feedback: "¡Correcto! Una vez creado el software, descargarlo 100 veces o 1,000,000 de veces cuesta casi lo mismo a nivel de infraestructura, permitiendo una escalabilidad exponencial."
+          },
+          {
+            q: "Si una empresa gasta $3,000 en publicidad digital y logra conseguir 150 clientes nuevos, su CAC (Costo de Adquisición de Clientes) es de:",
+            options: [
+              "$5 por cliente",
+              "$20 por cliente",
+              "$50 por cliente",
+              "$150 por cliente"
+            ],
+            correct: 1,
+            feedback: "¡Brillante cálculo! $3,000 ÷ 150 clientes = $20 por cada cliente adquirido."
+          },
+          {
+            q: "¿Cuál es la regla de oro comúnmente aceptada para el ratio LTV : CAC en modelos comerciales sostenibles?",
+            options: [
+              "LTV debe ser menor que el CAC (LTV < CAC)",
+              "LTV debe ser al menos 3 veces mayor que el CAC (LTV:CAC ≥ 3:1)",
+              "Ambos deben ser exactamente iguales a 1:1",
+              "El CAC no importa si tienes muchos seguidores en Instagram"
+            ],
+            correct: 1,
+            feedback: "¡Exacto! Un ratio de 3:1 significa que por cada dólar invertido en captación, el cliente genera al menos $3 de retorno durante su vida útil, asegurando rentabilidad y capacidad de reinversión."
+          }
+        ]
+      }
+    };
+
+    /* =====================================================================
+       2. STATE MANAGEMENT & LOCAL STORAGE PERSISTENCE (Zeigarnik Effect)
+       ===================================================================== */
+    let currentTopicId = 1;
+    let currentSubView = 'theory'; // 'theory', 'flashcards', 'simulator', 'quiz'
+    let timerInterval = null;
+    let timerSecondsLeft = 20 * 60;
+
+    // Load or initialize state
+    let appState = {
+      xp: 0,
+      completedCheckpoints: {}, // { 'topic-1-0': true, ... }
+      completedQuizzes: {},     // { 'quiz-1': true, ... }
+      masteredCards: {}         // { 'card-1-0': true, ... }
+    };
+
+    function loadState() {
+      try {
+        const saved = localStorage.getItem('marketing_hub_state');
+        if (saved) {
+          appState = JSON.parse(saved);
+        }
+      } catch (e) {
+        console.warn('Error loading state from localStorage:', e);
+      }
+      updateGamificationUI();
+    }
+
+    function saveState() {
+      try {
+        localStorage.setItem('marketing_hub_state', JSON.stringify(appState));
+      } catch (e) {
+        console.warn('Error saving state to localStorage:', e);
+      }
+      updateGamificationUI();
+    }
+
+    function addXP(amount, reason = "¡Buen trabajo!") {
+      appState.xp += amount;
+      saveState();
+      showToast(`+${amount} XP`, reason, "fa-bolt");
+
+      // Trigger confetti if significant milestone
+      if (amount >= 30) {
+        try {
+          confetti({
+            particleCount: 60,
+            spread: 70,
+            origin: { y: 0.8 },
+            colors: ['#6366f1', '#06b6d4', '#10b981', '#f59e0b']
+          });
+        } catch (e) { }
+      }
+    }
+
+    function updateGamificationUI() {
+      // User XP & Level Calculation
+      const xp = appState.xp || 0;
+      document.getElementById('user-xp').textContent = `${xp} XP`;
+
+      let rank = "Novato";
+      let nextLevelXP = 100;
+      let prevLevelXP = 0;
+
+      if (xp >= 500) {
+        rank = "CMO Master 🏆";
+        prevLevelXP = 500;
+        nextLevelXP = 1000;
+      } else if (xp >= 300) {
+        rank = "Growth Hacker 🚀";
+        prevLevelXP = 300;
+        nextLevelXP = 500;
+      } else if (xp >= 150) {
+        rank = "Estratega Jr ⚡";
+        prevLevelXP = 150;
+        nextLevelXP = 300;
+      } else if (xp >= 50) {
+        rank = "Analista 📊";
+        prevLevelXP = 50;
+        nextLevelXP = 150;
+      }
+
+      document.getElementById('user-rank').textContent = rank;
+
+      // XP bar calculation
+      const xpProgress = Math.min(100, Math.max(5, ((xp - prevLevelXP) / (nextLevelXP - prevLevelXP)) * 100));
+      document.getElementById('xp-bar').style.width = `${xpProgress}%`;
+
+      // Overall course progress (checkpoints across all 5 topics = 20 checkpoints + 5 quizzes = 25 items)
+      let totalItems = 0;
+      let completedItems = 0;
+
+      for (let t = 1; t <= 5; t++) {
+        const topic = TOPICS_DATA[t];
+        topic.checkpoints.forEach((_, idx) => {
+          totalItems++;
+          if (appState.completedCheckpoints[`topic-${t}-${idx}`]) {
+            completedItems++;
+          }
+        });
+        totalItems++; // Quiz item
+        if (appState.completedQuizzes[`quiz-${t}`]) {
+          completedItems++;
+        }
+      }
+
+      const percent = totalItems > 0 ? Math.round((completedItems / totalItems) * 100) : 0;
+      document.getElementById('progress-percent').textContent = `${percent}%`;
+
+      // SVG Circle Progress
+      const circle = document.getElementById('progress-circle');
+      if (circle) {
+        const circumference = 2 * Math.PI * 13; // ~81.68
+        const offset = circumference - (percent / 100) * circumference;
+        circle.style.strokeDashoffset = offset;
+      }
+
+      // Modules with quiz completed count
+      let modulesDone = 0;
+      for (let t = 1; t <= 5; t++) {
+        if (appState.completedQuizzes[`quiz-${t}`]) {
+          modulesDone++;
+        }
+      }
+      document.getElementById('progress-count').textContent = `${modulesDone}/5 Evaluados`;
+
+      // Update sidebar status dots
+      for (let t = 1; t <= 5; t++) {
+        const dot = document.getElementById(`topic-status-${t}`);
+        if (dot) {
+          if (appState.completedQuizzes[`quiz-${t}`]) {
+            dot.className = "w-2 h-2 rounded-full bg-emerald-400 shadow-glow-emerald";
+          } else {
+            dot.className = "w-2 h-2 rounded-full bg-slate-700";
+          }
+        }
+      }
+
+      // Update current topic checklist ratio
+      updateTopicChecklistUI();
+    }
+
+    function updateTopicChecklistUI() {
+      const topic = TOPICS_DATA[currentTopicId];
+      if (!topic) return;
+      let done = 0;
+      topic.checkpoints.forEach((_, idx) => {
+        if (appState.completedCheckpoints[`topic-${currentTopicId}-${idx}`]) done++;
+      });
+      const ratioEl = document.getElementById('topic-checklist-ratio');
+      if (ratioEl) {
+        ratioEl.textContent = `${done}/${topic.checkpoints.length} hitos completados`;
+      }
+    }
+
+    function toggleCheckpoint(topicId, idx) {
+      const key = `topic-${topicId}-${idx}`;
+      if (appState.completedCheckpoints[key]) {
+        delete appState.completedCheckpoints[key];
+      } else {
+        appState.completedCheckpoints[key] = true;
+        addXP(15, "¡Hito de estudio completado!");
+      }
+      saveState();
+    }
+
+    function toggleAllChecklist(markAll = true) {
+      const topic = TOPICS_DATA[currentTopicId];
+      let newlyAdded = 0;
+      topic.checkpoints.forEach((_, idx) => {
+        const key = `topic-${currentTopicId}-${idx}`;
+        if (markAll && !appState.completedCheckpoints[key]) {
+          appState.completedCheckpoints[key] = true;
+          newlyAdded++;
+        }
+      });
+      if (newlyAdded > 0) {
+        addXP(newlyAdded * 10, "¡Todos los hitos del tema completados!");
+      }
+      saveState();
+      renderChecklistCards();
+    }
+
+    function resetAllProgress() {
+      if (confirm("¿Estás seguro de que deseas reiniciar todos tus puntos de XP, quizzes y progreso guardado?")) {
+        appState = {
+          xp: 0,
+          completedCheckpoints: {},
+          completedQuizzes: {},
+          masteredCards: {}
+        };
+        saveState();
+        showToast("Progreso Reiniciado", "Empieza de nuevo desde cero.", "fa-rotate-left");
+        switchTopic(1);
+      }
+    }
+
+    /* =====================================================================
+       3. TOPIC & SUBVIEW SWITCHING (Hick's Law & Fitts's Law)
+       ===================================================================== */
+    function switchTopic(topicId) {
+      currentTopicId = topicId;
+      const data = TOPICS_DATA[topicId];
+      if (!data) return;
+
+      // Update Hero Header
+      document.getElementById('topic-badge').textContent = data.badge;
+      document.getElementById('topic-read-time').innerHTML = `<i class="fa-regular fa-clock"></i> ${data.readTime}`;
+      document.getElementById('topic-title').textContent = data.title;
+      document.getElementById('topic-subtitle').textContent = data.subtitle;
+
+      // Update simulator tab name
+      const simName = document.getElementById('simulator-tab-name');
+      if (topicId === 4) {
+        simName.textContent = "Filtro MASDA";
+      } else if (topicId === 5) {
+        simName.textContent = "Calc. CAC/LTV";
+      } else {
+        simName.textContent = "Taller / Roleplay";
+      }
+
+      // Update active navigation buttons (Sidebar)
+      for (let i = 1; i <= 5; i++) {
+        const btn = document.getElementById(`nav-btn-${i}`);
+        if (btn) {
+          if (i === topicId) {
+            btn.className = "w-full flex items-center justify-between p-3 rounded-xl transition-all duration-200 text-left group bg-indigo-600/20 text-indigo-300 border border-indigo-500/40 shadow-lg shadow-indigo-500/10";
+          } else {
+            btn.className = "w-full flex items-center justify-between p-3 rounded-xl transition-all duration-200 text-left group hover:bg-slate-900 text-slate-400 hover:text-slate-200 border border-transparent hover:border-slate-800";
+          }
+        }
+      }
+
+      // Update mobile nav bar
+      const mobileNavItems = document.querySelectorAll('.mobile-nav-item');
+      mobileNavItems.forEach((btn, idx) => {
+        if (idx + 1 === topicId) {
+          btn.classList.add('text-cyan-400', 'font-bold');
+          btn.classList.remove('text-slate-400');
+        } else {
+          btn.classList.remove('text-cyan-400', 'font-bold');
+          btn.classList.add('text-slate-400');
+        }
+      });
+
+      // Render Sub-Views
+      renderTheoryView();
+      renderFlashcardsView();
+      renderSimulatorView();
+      renderQuizView();
+
+      // Return to theory or keep current subview
+      switchSubView(currentSubView);
+
+      // Close mobile menu if open
+      closeMobileMenu();
+
+      // Scroll to top of content
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+
+      updateGamificationUI();
+    }
+
+    function switchSubView(view) {
+      currentSubView = view;
+      const views = ['theory', 'flashcards', 'simulator', 'quiz'];
+
+      views.forEach(v => {
+        const tabBtn = document.getElementById(`view-tab-${v}`);
+        const viewEl = document.getElementById(`subview-${v}`);
+
+        if (v === view) {
+          viewEl.classList.remove('hidden');
+          tabBtn.className = "px-3.5 py-2 rounded-lg text-xs font-semibold flex items-center gap-2 transition-all bg-indigo-600 text-white shadow-lg shadow-indigo-600/30";
+        } else {
+          viewEl.classList.add('hidden');
+          tabBtn.className = "px-3.5 py-2 rounded-lg text-xs font-semibold flex items-center gap-2 text-slate-400 hover:text-slate-200 transition-all";
+        }
+      });
+    }
+
+    /* =====================================================================
+       4. VIEW RENDERERS (THEORY, FLASHCARDS, SIMULATORS, QUIZZES)
+       ===================================================================== */
+
+    // Checkpoints list rendering helper
+    function renderChecklistCards() {
+      const topic = TOPICS_DATA[currentTopicId];
+      let checklistHtml = `
+        <div class="glass-card rounded-2xl p-5 mb-6 border border-slate-800">
+          <div class="flex items-center justify-between mb-3">
+            <span class="text-xs font-bold text-white flex items-center gap-2">
+              <i class="fa-solid fa-list-check text-cyan-400"></i>
+              <span>Hitos de Aprendizaje (Marca los conceptos que ya dominas para ganar XP):</span>
+            </span>
+            <span class="text-[10px] text-slate-400 font-mono">+15 XP por cada hito</span>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+      `;
+
+      topic.checkpoints.forEach((item, idx) => {
+        const isChecked = !!appState.completedCheckpoints[`topic-${currentTopicId}-${idx}`];
+        checklistHtml += `
+          <label class="flex items-start gap-3 p-2.5 rounded-xl ${isChecked ? 'bg-indigo-950/30 border-indigo-500/40' : 'bg-slate-900 border-slate-800'} border hover:border-slate-700 cursor-pointer transition-all">
+            <input type="checkbox" onchange="toggleCheckpoint(${currentTopicId}, ${idx}); renderChecklistCards();" 
+                   ${isChecked ? 'checked' : ''} 
+                   class="mt-0.5 rounded border-slate-700 text-indigo-600 focus:ring-0 focus:ring-offset-0 bg-slate-800">
+            <span class="text-xs ${isChecked ? 'text-indigo-200 line-through' : 'text-slate-300'} font-medium select-none">${item}</span>
+          </label>
+        `;
+      });
+
+      checklistHtml += `
+          </div>
+        </div>
+      `;
+      return checklistHtml;
+    }
+
+    function renderTheoryView() {
+      const container = document.getElementById('subview-theory');
+      const topic = TOPICS_DATA[currentTopicId];
+
+      container.innerHTML = `
+        ${renderChecklistCards()}
+        ${topic.theoryHtml}
+      `;
+    }
+
+    // Interactive Timeline switcher in Topic 1
+    function selectTimelineEra(era) {
+      const eraData = {
+        1: {
+          badge: "ERA DE PRODUCCIÓN (1850-1920)",
+          title: "Premisa: 'Si lo fabricas bien y barato, se venderá solo'",
+          desc: "Foco industrial absoluto en la capacidad de producción en serie, economías de escala y estandarización mecánica (ej. Ford Modelo T). La demanda superaba a la oferta; no existía necesidad de investigar al cliente.",
+          metric: "Reducción de Costo Unitario"
+        },
+        2: {
+          badge: "ERA DE VENTAS (1920-1950)",
+          title: "Premisa: 'Fabricar primero, empujar con publicidad después'",
+          desc: "Tras la Gran Depresión y la sobrecapacidad industrial, la oferta comenzó a superar a la demanda. Nace la venta a presión ('Hard Selling') y técnicas persuasivas para liquidar inventarios no deseados.",
+          metric: "Liquidación & Rotación Forzada"
+        },
+        3: {
+          badge: "ERA DEL MARKETING (1950-1990)",
+          title: "Premisa: 'El cliente es el rey: Sense & Respond'",
+          desc: "Las empresas descubren que es más barato investigar qué necesita el cliente antes de construir la fábrica. Nace la investigación de mercados, la segmentación y el posicionamiento de marca.",
+          metric: "Satisfacción & Ajuste Demanda"
+        },
+        4: {
+          badge: "ERA RELACIONAL (1990-2010)",
+          title: "Premisa: 'Retener a un cliente es 5 veces más barato que adquirir uno nuevo'",
+          desc: "Auge del software CRM (Customer Relationship Management) y programas de fidelidad. El objetivo migra de la transacción puntual al Valor de Vida del Cliente (LTV).",
+          metric: "Lealtad a Largo Plazo (LTV)"
+        },
+        5: {
+          badge: "ERA ACTUAL: DIGITAL & SOSTENIBLE",
+          title: "Premisa: 'Datos en tiempo real, economía circular y algoritmos de IA'",
+          desc: "Consumidores hiperconectados, comercio omnicanal sin fricción y exigencia ineludible de sostenibilidad B2B. Los datos y la IA son la nueva materia prima estratégica corporativa.",
+          metric: "Algoritmos + Huella Cero"
+        }
+      };
+
+      const sel = eraData[era];
+      if (!sel) return;
+
+      document.getElementById('era-detail-badge').textContent = sel.badge;
+      document.getElementById('era-detail-title').textContent = sel.title;
+      document.getElementById('era-detail-desc').textContent = sel.desc;
+      document.getElementById('era-detail-metric').querySelector('.font-mono').textContent = sel.metric;
+
+      // Update button styles
+      for (let i = 1; i <= 5; i++) {
+        const btn = document.getElementById(`era-btn-${i}`);
+        if (btn) {
+          if (i === era) {
+            btn.className = "timeline-era-btn p-3 rounded-xl bg-indigo-600/30 border border-indigo-500/50 text-left transition-all";
+            btn.querySelector('.text-slate-300')?.classList.replace('text-slate-300', 'text-white');
+          } else {
+            btn.className = "timeline-era-btn p-3 rounded-xl bg-slate-900 border border-slate-800 hover:border-slate-700 text-left transition-all";
+          }
+        }
+      }
+    }
+
+    // 3D Flip Flashcards View
+    function renderFlashcardsView() {
+      const container = document.getElementById('subview-flashcards');
+      const topic = TOPICS_DATA[currentTopicId];
+
+      let html = `
+        <div class="glass-card rounded-2xl p-6 mb-6">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+              <span class="text-[10px] font-mono uppercase tracking-wider text-cyan-400 font-bold">Glosario Bilingüe Interactivo</span>
+              <h3 class="font-display font-bold text-white text-lg">Flashcards 3D (Español / Inglés)</h3>
+              <p class="text-xs text-slate-400 mt-1">Haz clic en cualquier tarjeta para voltearla y escuchar la pronunciación.</p>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="text-xs font-mono text-indigo-300 bg-indigo-500/20 px-3 py-1.5 rounded-xl border border-indigo-500/30">
+                ${topic.glossary.length} Términos Clave
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+      `;
+
+      topic.glossary.forEach((card, idx) => {
+        const cardKey = `card-${currentTopicId}-${idx}`;
+        const isMastered = !!appState.masteredCards[cardKey];
+
+        html += `
+          <div class="flashcard-container perspective-1000 h-64 cursor-pointer" onclick="flipFlashcard(this)">
+            <div class="flipper relative w-full h-full transform-style-3d transition-transform duration-500">
+              
+              <!-- Front Side -->
+              <div class="absolute inset-0 backface-hidden glass-card rounded-2xl p-5 flex flex-col justify-between border ${isMastered ? 'border-emerald-500/40 shadow-glow-emerald' : 'border-slate-800'}">
+                <div>
+                  <div class="flex items-center justify-between">
+                    <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 uppercase font-semibold">Término ${idx + 1}</span>
+                    <button onclick="event.stopPropagation(); speakTerm('${card.en}', 'en-US');" title="Escuchar en inglés" class="w-7 h-7 rounded-lg bg-slate-800 hover:bg-cyan-500/20 text-slate-400 hover:text-cyan-300 flex items-center justify-center transition-all text-xs">
+                      <i class="fa-solid fa-volume-high"></i>
+                    </button>
+                  </div>
+                  <h4 class="font-display font-bold text-white text-lg mt-3 leading-snug">${card.es}</h4>
+                  <p class="text-xs font-mono text-cyan-400 font-medium mt-1 flex items-center gap-1.5">
+                    <i class="fa-solid fa-globe text-[10px]"></i>
+                    ${card.en}
+                  </p>
+                </div>
+
+                <div class="pt-3 border-t border-slate-800/80 flex items-center justify-between text-[11px] text-slate-500">
+                  <span class="flex items-center gap-1"><i class="fa-solid fa-arrow-rotate-right text-[10px]"></i> Clic para voltear</span>
+                  <button onclick="event.stopPropagation(); toggleMasterCard(${currentTopicId}, ${idx});" class="text-xs px-2 py-0.5 rounded ${isMastered ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40' : 'bg-slate-800 text-slate-400 hover:text-slate-200'}">
+                    ${isMastered ? '✓ Dominado' : 'Marcar visto'}
+                  </button>
+                </div>
+              </div>
+
+              <!-- Back Side (Flipped) -->
+              <div class="absolute inset-0 backface-hidden rotate-y-180 bg-slate-900 rounded-2xl p-5 flex flex-col justify-between border border-cyan-500/40 shadow-2xl">
+                <div>
+                  <div class="flex items-center justify-between mb-2">
+                    <span class="text-[10px] font-mono uppercase tracking-wider text-cyan-400 font-bold">Definición Académica</span>
+                    <span class="text-[10px] text-slate-400 font-mono">${card.en}</span>
+                  </div>
+                  <p class="text-xs text-slate-200 leading-relaxed mt-2 font-medium">
+                    ${card.def}
+                  </p>
+                </div>
+
+                <div class="pt-2 border-t border-slate-800 flex items-center justify-between text-[11px]">
+                  <span class="text-slate-400 italic">UPDS Marketing Hub</span>
+                  <button onclick="event.stopPropagation(); speakTerm('${card.def}', 'es-ES');" title="Escuchar definición en español" class="text-indigo-400 hover:text-indigo-300 flex items-center gap-1 text-[11px]">
+                    <i class="fa-solid fa-play text-[10px]"></i> Audio ES
+                  </button>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        `;
+      });
+
+      html += `</div>`;
+      container.innerHTML = html;
+    }
+
+    function flipFlashcard(cardEl) {
+      cardEl.classList.toggle('card-flipped');
+    }
+
+    function toggleMasterCard(topicId, idx) {
+      const cardKey = `card-${topicId}-${idx}`;
+      if (appState.masteredCards[cardKey]) {
+        delete appState.masteredCards[cardKey];
+      } else {
+        appState.masteredCards[cardKey] = true;
+        addXP(10, "¡Tarjeta bilingüe dominada!");
+      }
+      saveState();
+      renderFlashcardsView();
+    }
+
+    // Web Speech API Voice synthesis
+    function speakTerm(text, lang = 'en-US') {
+      try {
+        if ('speechSynthesis' in window) {
+          window.speechSynthesis.cancel();
+          const utterance = new SpeechSynthesisUtterance(text);
+          utterance.lang = lang;
+          utterance.rate = 0.95;
+          window.speechSynthesis.speak(utterance);
+        } else {
+          showToast("Voz no soportada", "Tu navegador no soporta síntesis de voz.", "fa-triangle-exclamation");
+        }
+      } catch (e) {
+        console.warn('Speech error:', e);
+      }
+    }
+
+    // Simulators Renderer (MASDA in M4, CAC/LTV in M5, Roleplays in M1, M2, M3)
+    function renderSimulatorView() {
+      const container = document.getElementById('subview-simulator');
+
+      if (currentTopicId === 4) {
+        // TEMA 4: FILTRO MASDA INTERACTIVO
+        container.innerHTML = `
+          <div class="glass-card rounded-2xl p-6 border-l-4 border-l-amber-400">
+            <span class="text-[10px] font-mono uppercase tracking-wider text-amber-400 font-bold">Simulador Interactivo de Segmentación</span>
+            <h3 class="font-display font-bold text-white text-xl mt-1">Validador del Filtro M.A.S.D.A.</h3>
+            <p class="text-xs text-slate-400 mt-1 max-w-2xl">
+              Prueba la viabilidad de cualquier segmento de mercado. Si reprueba aunque sea un solo criterio crítico, el segmento no es comercialmente aconsejable.
+            </p>
+
+            <!-- Presets -->
+            <div class="mt-4 flex flex-wrap items-center gap-2 text-xs">
+              <span class="text-slate-400">Cargar caso predeterminado:</span>
+              <button onclick="loadMasdaPreset('quinua')" class="px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-cyan-300 border border-slate-700 text-[11px]">
+                Quinua Real Gourmet B2B
+              </button>
+              <button onclick="loadMasdaPreset('app')" class="px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-amber-300 border border-slate-700 text-[11px]">
+                App Delivery Nocturna Oruro
+              </button>
+              <button onclick="loadMasdaPreset('mineria')" class="px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-emerald-300 border border-slate-700 text-[11px]">
+                Filtros Mineros Industriales
+              </button>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            
+            <!-- Controls Form -->
+            <div class="lg:col-span-2 glass-card rounded-2xl p-6 space-y-4">
+              
+              <div>
+                <label class="block text-xs font-bold text-slate-300 mb-1">Nombre del Segmento de Mercado:</label>
+                <input type="text" id="masda-segment-name" value="Restaurantes Gourmet de Europa para Quinua Real" 
+                       class="w-full bg-slate-950 text-xs text-white px-3 py-2 rounded-xl border border-slate-800 focus:outline-none focus:border-amber-400">
+              </div>
+
+              <!-- 5 MASDA Checkboxes with descriptions -->
+              <div class="space-y-3 pt-2">
+                
+                <label class="flex items-start gap-3 p-3 bg-slate-900 rounded-xl border border-slate-800 cursor-pointer hover:border-slate-700 transition-all">
+                  <input type="checkbox" id="masda-m" checked onchange="calculateMasda()" class="mt-1 rounded border-slate-700 text-amber-500 focus:ring-0 bg-slate-800">
+                  <div>
+                    <span class="text-xs font-bold text-white block">M • Medible (Cuantificable)</span>
+                    <span class="text-[11px] text-slate-400">Podemos estimar con datos estadísticos el número de clientes y su poder de compra en dólares.</span>
+                  </div>
+                </label>
+
+                <label class="flex items-start gap-3 p-3 bg-slate-900 rounded-xl border border-slate-800 cursor-pointer hover:border-slate-700 transition-all">
+                  <input type="checkbox" id="masda-a1" checked onchange="calculateMasda()" class="mt-1 rounded border-slate-700 text-cyan-500 focus:ring-0 bg-slate-800">
+                  <div>
+                    <span class="text-xs font-bold text-white block">A • Accesible (Alcanzable)</span>
+                    <span class="text-[11px] text-slate-400">Poseemos canales logísticos de transporte y medios de comunicación digitales para llegar a ellos.</span>
+                  </div>
+                </label>
+
+                <label class="flex items-start gap-3 p-3 bg-slate-900 rounded-xl border border-slate-800 cursor-pointer hover:border-slate-700 transition-all">
+                  <input type="checkbox" id="masda-s" checked onchange="calculateMasda()" class="mt-1 rounded border-slate-700 text-emerald-500 focus:ring-0 bg-slate-800">
+                  <div>
+                    <span class="text-xs font-bold text-white block">S • Sustancial (Rentable)</span>
+                    <span class="text-[11px] text-slate-400">El tamaño del mercado o el margen por pedido genera suficientes ganancias para cubrir costos y generar ROI.</span>
+                  </div>
+                </label>
+
+                <label class="flex items-start gap-3 p-3 bg-slate-900 rounded-xl border border-slate-800 cursor-pointer hover:border-slate-700 transition-all">
+                  <input type="checkbox" id="masda-d" checked onchange="calculateMasda()" class="mt-1 rounded border-slate-700 text-purple-500 focus:ring-0 bg-slate-800">
+                  <div>
+                    <span class="text-xs font-bold text-white block">D • Diferenciable (Respuesta Única)</span>
+                    <span class="text-[11px] text-slate-400">Reaccionan de manera distinta ante la propuesta que otros grupos (no da igual una oferta general).</span>
+                  </div>
+                </label>
+
+                <label class="flex items-start gap-3 p-3 bg-slate-900 rounded-xl border border-slate-800 cursor-pointer hover:border-slate-700 transition-all">
+                  <input type="checkbox" id="masda-a2" checked onchange="calculateMasda()" class="mt-1 rounded border-slate-700 text-rose-500 focus:ring-0 bg-slate-800">
+                  <div>
+                    <span class="text-xs font-bold text-white block">A • Accionable (Capacidad Operativa)</span>
+                    <span class="text-[11px] text-slate-400">Nuestra empresa posee el capital, la maquinaria y el personal para ejecutar el programa comercial.</span>
+                  </div>
+                </label>
+
+              </div>
+            </div>
+
+            <!-- Verdict & Gauge -->
+            <div class="glass-card rounded-2xl p-6 flex flex-col justify-between text-center">
+              <div>
+                <span class="text-[10px] font-mono uppercase tracking-wider text-slate-400 font-bold">Diagnóstico Estratégico</span>
+                <div id="masda-score-badge" class="my-4 inline-flex items-center justify-center w-28 h-28 rounded-full border-4 border-emerald-400 bg-emerald-500/10 shadow-glow-emerald">
+                  <div>
+                    <span id="masda-score-text" class="text-3xl font-black font-display text-white">100%</span>
+                    <span class="block text-[10px] font-mono text-emerald-400 font-bold uppercase">Viabilidad</span>
+                  </div>
+                </div>
+                <h4 id="masda-verdict-title" class="font-display font-bold text-white text-base">¡Segmento Altamente Viable!</h4>
+                <p id="masda-verdict-desc" class="text-xs text-slate-400 mt-2 leading-relaxed">
+                  Cumple los 5 filtros estrictos del modelo académico. Es seguro invertir recursos y diseñar el mix de marketing.
+                </p>
+              </div>
+
+              <div class="pt-4 border-t border-slate-800">
+                <button onclick="addXP(25, '¡Simulador MASDA analizado con éxito!');" class="w-full py-2.5 rounded-xl bg-amber-500/20 text-amber-300 border border-amber-500/40 hover:bg-amber-500/30 text-xs font-bold transition-all">
+                  Registrar Análisis de Segmento (+25 XP)
+                </button>
+              </div>
+            </div>
+
+          </div>
+        `;
+        calculateMasda();
+
+      } else if (currentTopicId === 5) {
+        // TEMA 5: MINI CALCULADORA INTERACTIVA DE ROI (CAC vs LTV)
+        container.innerHTML = `
+          <div class="glass-card rounded-2xl p-6 border-l-4 border-l-emerald-400">
+            <span class="text-[10px] font-mono uppercase tracking-wider text-emerald-400 font-bold">Simulador Financiero Unit Economics</span>
+            <h3 class="font-display font-bold text-white text-xl mt-1">Calculadora Interactiva de ROI (CAC vs. LTV)</h3>
+            <p class="text-xs text-slate-400 mt-1 max-w-2xl">
+              Modifica los valores numéricos para evaluar la viabilidad matemática de tu adquisición de clientes y predecir la salud financiera corporativa.
+            </p>
+          </div>
+
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            
+            <!-- Inputs Panel -->
+            <div class="lg:col-span-2 glass-card rounded-2xl p-6 space-y-4">
+              <h4 class="font-display font-bold text-white text-sm flex items-center gap-2">
+                <i class="fa-solid fa-sliders text-cyan-400"></i>
+                <span>Variables Comerciales del Negocio:</span>
+              </h4>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+                <div>
+                  <label class="block text-slate-300 font-semibold mb-1">Presupuesto Mensual de Marketing ($):</label>
+                  <input type="number" id="calc-mkt-spend" value="1500" oninput="calculateUnitEconomics()" 
+                         class="w-full bg-slate-950 text-white px-3 py-2 rounded-xl border border-slate-800 font-mono focus:border-cyan-400">
+                  <span class="text-[10px] text-slate-500">Inversión en anuncios, software y equipo comercial.</span>
+                </div>
+
+                <div>
+                  <label class="block text-slate-300 font-semibold mb-1">Nuevos Clientes Conseguidos al Mes:</label>
+                  <input type="number" id="calc-new-clients" value="100" oninput="calculateUnitEconomics()" 
+                         class="w-full bg-slate-950 text-white px-3 py-2 rounded-xl border border-slate-800 font-mono focus:border-cyan-400">
+                  <span class="text-[10px] text-slate-500">Clientes que cerraron una primera compra real.</span>
+                </div>
+
+                <div>
+                  <label class="block text-slate-300 font-semibold mb-1">Ticket Promedio por Compra ($):</label>
+                  <input type="number" id="calc-avg-ticket" value="50" oninput="calculateUnitEconomics()" 
+                         class="w-full bg-slate-950 text-white px-3 py-2 rounded-xl border border-slate-800 font-mono focus:border-cyan-400">
+                  <span class="text-[10px] text-slate-500">Monto promedio que paga el cliente en cada pedido.</span>
+                </div>
+
+                <div>
+                  <label class="block text-slate-300 font-semibold mb-1">Frecuencia de Compra al Año:</label>
+                  <input type="number" id="calc-frequency" value="3" oninput="calculateUnitEconomics()" 
+                         class="w-full bg-slate-950 text-white px-3 py-2 rounded-xl border border-slate-800 font-mono focus:border-cyan-400">
+                  <span class="text-[10px] text-slate-500">Cuántas veces compra un mismo cliente en 12 meses.</span>
+                </div>
+
+                <div class="sm:col-span-2">
+                  <label class="block text-slate-300 font-semibold mb-1">Vida Útil de Retención del Cliente (Años):</label>
+                  <input type="range" id="calc-retention-years" min="1" max="10" step="0.5" value="3" oninput="calculateUnitEconomics()" 
+                         class="w-full accent-cyan-400 cursor-pointer">
+                  <div class="flex justify-between text-[11px] text-slate-400 font-mono">
+                    <span>1 año</span>
+                    <span id="retention-years-val" class="text-cyan-400 font-bold">3 años</span>
+                    <span>10 años</span>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Live Output Cards -->
+            <div class="glass-card rounded-2xl p-6 flex flex-col justify-between space-y-4">
+              
+              <div>
+                <span class="text-[10px] font-mono uppercase tracking-wider text-slate-400 font-bold">Resultados Matemáticos</span>
+                
+                <div class="mt-4 p-3 bg-slate-950 rounded-xl border border-slate-800">
+                  <span class="text-[10px] text-indigo-400 font-mono uppercase font-bold">Costo de Adquisición (CAC)</span>
+                  <div id="res-cac" class="text-2xl font-black font-mono text-white mt-0.5">$15.00</div>
+                  <span class="text-[10px] text-slate-500">Inversión ÷ Clientes nuevos</span>
+                </div>
+
+                <div class="mt-2.5 p-3 bg-slate-950 rounded-xl border border-slate-800">
+                  <span class="text-[10px] text-emerald-400 font-mono uppercase font-bold">Lifetime Value (LTV)</span>
+                  <div id="res-ltv" class="text-2xl font-black font-mono text-emerald-400 mt-0.5">$450.00</div>
+                  <span class="text-[10px] text-slate-500">Ticket × Frecuencia × Años de vida</span>
+                </div>
+
+                <div class="mt-2.5 p-3 bg-slate-950 rounded-xl border border-slate-800">
+                  <span class="text-[10px] text-cyan-400 font-mono uppercase font-bold">Ratio LTV : CAC</span>
+                  <div id="res-ratio" class="text-3xl font-black font-mono text-cyan-300 mt-0.5">30.0 : 1</div>
+                  <span id="res-ratio-badge" class="inline-block mt-1 px-2 py-0.5 rounded text-[10px] font-bold font-mono bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+                    Altamente Rentable
+                  </span>
+                </div>
+              </div>
+
+              <div>
+                <button onclick="addXP(30, '¡Simulación financiera CAC/LTV calculada!');" class="w-full py-2.5 rounded-xl bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 hover:bg-emerald-500/30 text-xs font-bold transition-all">
+                  Guardar Simulación Financiera (+30 XP)
+                </button>
+              </div>
+
+            </div>
+
+          </div>
+        `;
+        calculateUnitEconomics();
+
+      } else {
+        // TEMA 1, 2, 3: ROLEPLAY / WORKSHOP INTERACTIVO CON TIMER
+        const topic = TOPICS_DATA[currentTopicId];
+        const role = topic.roleplay;
+
+        container.innerHTML = `
+          <div class="glass-card rounded-2xl p-6 border-l-4 border-l-purple-400">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div>
+                <span class="text-[10px] font-mono uppercase tracking-wider text-purple-400 font-bold">Taller Práctico / Roleplay</span>
+                <h3 class="font-display font-bold text-white text-xl mt-1">${role.title}</h3>
+                <p class="text-xs text-slate-400 mt-1">${role.subtitle}</p>
+              </div>
+              
+              <!-- Countdown Timer -->
+              <div class="flex items-center gap-3 bg-slate-950 px-4 py-2 rounded-xl border border-slate-800 self-start sm:self-auto">
+                <i class="fa-solid fa-stopwatch text-amber-400 text-lg"></i>
+                <div>
+                  <span id="roleplay-timer" class="font-mono text-lg font-bold text-white">20:00</span>
+                  <span class="block text-[9px] text-slate-500 uppercase font-mono">Temporizador</span>
+                </div>
+                <button onclick="toggleRoleplayTimer()" id="timer-toggle-btn" class="ml-2 w-8 h-8 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white flex items-center justify-center text-xs transition-all">
+                  <i class="fa-solid fa-play"></i>
+                </button>
+                <button onclick="resetRoleplayTimer()" title="Reiniciar reloj" class="text-slate-500 hover:text-rose-400 text-xs p-1">
+                  <i class="fa-solid fa-arrows-rotate"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Problem & Resolution Box -->
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            
+            <div class="glass-card rounded-2xl p-6 space-y-4">
+              <span class="text-[10px] font-mono uppercase tracking-wider text-amber-400 font-bold">El Escenario Crítico</span>
+              <p class="text-xs text-slate-300 leading-relaxed font-medium bg-slate-950 p-4 rounded-xl border border-slate-800">
+                "${role.desc}"
+              </p>
+
+              <div>
+                <span class="text-xs font-bold text-white block mb-2">Instrucciones para el equipo:</span>
+                <ul class="space-y-2 text-xs text-slate-400">
+                  ${role.tasks.map(t => `<li class="flex items-start gap-2"><i class="fa-solid fa-check text-indigo-400 mt-0.5"></i> <span>${t}</span></li>`).join('')}
+                </ul>
+              </div>
+            </div>
+
+            <div class="glass-card rounded-2xl p-6 flex flex-col justify-between">
+              <div>
+                <span class="text-[10px] font-mono uppercase tracking-wider text-cyan-400 font-bold">Cuaderno de Resolución</span>
+                <h4 class="font-display font-bold text-white text-sm mt-1">Escribe la propuesta estratégica de tu equipo:</h4>
+                <textarea id="roleplay-notes" placeholder="Pega aquí los argumentos clave, fórmulas y soluciones diseñadas por tu equipo..." 
+                          class="w-full h-44 mt-3 bg-slate-950 text-xs text-slate-200 p-3 rounded-xl border border-slate-800 focus:outline-none focus:border-indigo-500 font-mono"></textarea>
+              </div>
+
+              <div class="mt-4 pt-3 border-t border-slate-800 flex items-center justify-between">
+                <span class="text-[11px] text-slate-500">Se guarda automáticamente en tu navegador</span>
+                <button onclick="saveRoleplayNotes();" class="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold transition-all shadow-lg shadow-indigo-600/30">
+                  Guardar Resolución (+35 XP)
+                </button>
+              </div>
+            </div>
+
+          </div>
+        `;
+
+        loadRoleplayNotes();
+      }
+    }
+
+    // Roleplay timer functions
+    function toggleRoleplayTimer() {
+      const btn = document.getElementById('timer-toggle-btn');
+      if (timerInterval) {
+        clearInterval(timerInterval);
+        timerInterval = null;
+        if (btn) btn.innerHTML = `<i class="fa-solid fa-play"></i>`;
+      } else {
+        timerInterval = setInterval(() => {
+          if (timerSecondsLeft > 0) {
+            timerSecondsLeft--;
+            updateTimerDisplay();
+          } else {
+            clearInterval(timerInterval);
+            timerInterval = null;
+            if (btn) btn.innerHTML = `<i class="fa-solid fa-play"></i>`;
+            showToast("¡Tiempo Cumplido!", "Los 20 minutos de simulación finalizaron.", "fa-bell");
+          }
+        }, 1000);
+        if (btn) btn.innerHTML = `<i class="fa-solid fa-pause"></i>`;
+      }
+    }
+
+    function resetRoleplayTimer() {
+      if (timerInterval) {
+        clearInterval(timerInterval);
+        timerInterval = null;
+      }
+      timerSecondsLeft = 20 * 60;
+      updateTimerDisplay();
+      const btn = document.getElementById('timer-toggle-btn');
+      if (btn) btn.innerHTML = `<i class="fa-solid fa-play"></i>`;
+    }
+
+    function updateTimerDisplay() {
+      const m = Math.floor(timerSecondsLeft / 60);
+      const s = timerSecondsLeft % 60;
+      const el = document.getElementById('roleplay-timer');
+      if (el) {
+        el.textContent = `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+      }
+    }
+
+    function saveRoleplayNotes() {
+      const notes = document.getElementById('roleplay-notes')?.value || '';
+      localStorage.setItem(`roleplay_notes_${currentTopicId}`, notes);
+      addXP(35, "¡Resolución de taller guardada!");
+    }
+
+    function loadRoleplayNotes() {
+      const saved = localStorage.getItem(`roleplay_notes_${currentTopicId}`);
+      const notesEl = document.getElementById('roleplay-notes');
+      if (notesEl && saved) {
+        notesEl.value = saved;
+      }
+    }
+
+    // MASDA simulator logic
+    function calculateMasda() {
+      const m = document.getElementById('masda-m')?.checked;
+      const a1 = document.getElementById('masda-a1')?.checked;
+      const s = document.getElementById('masda-s')?.checked;
+      const d = document.getElementById('masda-d')?.checked;
+      const a2 = document.getElementById('masda-a2')?.checked;
+
+      const checkedCount = [m, a1, s, d, a2].filter(Boolean).length;
+      const score = checkedCount * 20;
+
+      const scoreText = document.getElementById('masda-score-text');
+      const badge = document.getElementById('masda-score-badge');
+      const title = document.getElementById('masda-verdict-title');
+      const desc = document.getElementById('masda-verdict-desc');
+
+      if (!scoreText) return;
+
+      scoreText.textContent = `${score}%`;
+
+      if (score === 100) {
+        badge.className = "my-4 inline-flex items-center justify-center w-28 h-28 rounded-full border-4 border-emerald-400 bg-emerald-500/10 shadow-glow-emerald";
+        badge.querySelector('.font-mono').className = "block text-[10px] font-mono text-emerald-400 font-bold uppercase";
+        title.textContent = "¡Segmento Altamente Viable!";
+        title.className = "font-display font-bold text-emerald-300 text-base";
+        desc.textContent = "Cumple los 5 filtros estrictos del modelo académico. Es seguro invertir recursos y diseñar el mix de marketing.";
+      } else if (score >= 60) {
+        badge.className = "my-4 inline-flex items-center justify-center w-28 h-28 rounded-full border-4 border-amber-400 bg-amber-500/10";
+        badge.querySelector('.font-mono').className = "block text-[10px] font-mono text-amber-400 font-bold uppercase";
+        title.textContent = "Alerta: Viabilidad Parcial";
+        title.className = "font-display font-bold text-amber-300 text-base";
+        desc.textContent = "El segmento carece de algunos criterios esenciales. Debes rediseñar tus canales o verificar la rentabilidad antes de lanzar.";
+      } else {
+        badge.className = "my-4 inline-flex items-center justify-center w-28 h-28 rounded-full border-4 border-rose-500 bg-rose-500/10";
+        badge.querySelector('.font-mono').className = "block text-[10px] font-mono text-rose-400 font-bold uppercase";
+        title.textContent = "Segmento No Recomendado";
+        title.className = "font-display font-bold text-rose-400 text-base";
+        desc.textContent = "No cumple los requisitos mínimos. Atacar este mercado generará dispersión de presupuesto y pérdidas operativas.";
+      }
+    }
+
+    function loadMasdaPreset(preset) {
+      const nameInput = document.getElementById('masda-segment-name');
+      const m = document.getElementById('masda-m');
+      const a1 = document.getElementById('masda-a1');
+      const s = document.getElementById('masda-s');
+      const d = document.getElementById('masda-d');
+      const a2 = document.getElementById('masda-a2');
+
+      if (preset === 'quinua') {
+        nameInput.value = "Restaurantes Europeos Gourmet para Quinua Real Orgánica";
+        m.checked = true; a1.checked = true; s.checked = true; d.checked = true; a2.checked = true;
+      } else if (preset === 'app') {
+        nameInput.value = "App de Delivery de Comida Exclusiva para Madrugadas en Oruro (3am-6am)";
+        m.checked = true; a1.checked = true; s.checked = false; d.checked = true; a2.checked = false;
+      } else if (preset === 'mineria') {
+        nameInput.value = "Cooperativas Mineras de Estaño para Filtros Industriales";
+        m.checked = true; a1.checked = true; s.checked = true; d.checked = true; a2.checked = true;
+      }
+      calculateMasda();
+    }
+
+    // CAC vs LTV simulator logic
+    function calculateUnitEconomics() {
+      const spend = parseFloat(document.getElementById('calc-mkt-spend')?.value || 0);
+      const newClients = parseFloat(document.getElementById('calc-new-clients')?.value || 1);
+      const avgTicket = parseFloat(document.getElementById('calc-avg-ticket')?.value || 0);
+      const freq = parseFloat(document.getElementById('calc-frequency')?.value || 1);
+      const years = parseFloat(document.getElementById('calc-retention-years')?.value || 1);
+
+      document.getElementById('retention-years-val').textContent = `${years} ${years === 1 ? 'año' : 'años'}`;
+
+      // Calculations
+      const cac = newClients > 0 ? (spend / newClients) : 0;
+      const ltv = avgTicket * freq * years;
+      const ratio = cac > 0 ? (ltv / cac) : 0;
+
+      const resCac = document.getElementById('res-cac');
+      const resLtv = document.getElementById('res-ltv');
+      const resRatio = document.getElementById('res-ratio');
+      const badge = document.getElementById('res-ratio-badge');
+
+      if (!resCac) return;
+
+      resCac.textContent = `$${cac.toFixed(2)}`;
+      resLtv.textContent = `$${ltv.toFixed(2)}`;
+      resRatio.textContent = `${ratio.toFixed(1)} : 1`;
+
+      if (ratio < 1) {
+        badge.className = "inline-block mt-1 px-2 py-0.5 rounded text-[10px] font-bold font-mono bg-rose-500/20 text-rose-300 border border-rose-500/40";
+        badge.textContent = "Pérdida Crítica (Destrucción de Capital)";
+      } else if (ratio < 3) {
+        badge.className = "inline-block mt-1 px-2 py-0.5 rounded text-[10px] font-bold font-mono bg-amber-500/20 text-amber-300 border border-amber-500/40";
+        badge.textContent = "Equilibrio Frágil (Ajustar CAC o Retención)";
+      } else if (ratio <= 6) {
+        badge.className = "inline-block mt-1 px-2 py-0.5 rounded text-[10px] font-bold font-mono bg-emerald-500/20 text-emerald-300 border border-emerald-500/40";
+        badge.textContent = "Óptimo y Altamente Escalable";
+      } else {
+        badge.className = "inline-block mt-1 px-2 py-0.5 rounded text-[10px] font-bold font-mono bg-cyan-500/20 text-cyan-300 border border-cyan-500/40";
+        badge.textContent = "Súper Rentable (Posible Subinversión en Marketing)";
+      }
+    }
+
+    // Quiz Renderer (3 Questions with immediate feedback & celebration)
+    function renderQuizView() {
+      const container = document.getElementById('subview-quiz');
+      const topic = TOPICS_DATA[currentTopicId];
+      const quizKey = `quiz-${currentTopicId}`;
+      const isAlreadyDone = !!appState.completedQuizzes[quizKey];
+
+      let html = `
+        <div class="glass-card rounded-2xl p-6 mb-6">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+              <span class="text-[10px] font-mono uppercase tracking-wider text-amber-400 font-bold">Autoevaluación de Dominio</span>
+              <h3 class="font-display font-bold text-white text-xl mt-1">Quiz Rápido del Tema ${currentTopicId}</h3>
+              <p class="text-xs text-slate-400 mt-1">Responde 3 preguntas de opción múltiple con feedback formativo instantáneo.</p>
+            </div>
+            <div class="flex items-center gap-2">
+              <span id="quiz-status-pill" class="text-xs font-mono px-3 py-1.5 rounded-xl border ${isAlreadyDone ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40' : 'bg-slate-900 text-slate-400 border-slate-800'}">
+                ${isAlreadyDone ? '✓ Evaluado (+50 XP)' : 'Pendiente (+50 XP)'}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="space-y-6">
+      `;
+
+      topic.quiz.forEach((qItem, qIdx) => {
+        html += `
+          <div class="glass-card rounded-2xl p-6 question-card" id="q-card-${qIdx}">
+            <div class="flex items-start gap-3">
+              <span class="w-6 h-6 rounded-lg bg-indigo-500/20 text-indigo-400 font-mono font-bold flex items-center justify-center shrink-0 text-xs">
+                ${qIdx + 1}
+              </span>
+              <div class="flex-1">
+                <h4 class="font-display font-bold text-white text-sm sm:text-base leading-snug">
+                  ${qItem.q}
+                </h4>
+
+                <div class="mt-4 space-y-2.5">
+        `;
+
+        qItem.options.forEach((opt, optIdx) => {
+          html += `
+            <button onclick="handleQuizAnswer(${qIdx}, ${optIdx})" id="opt-btn-${qIdx}-${optIdx}" 
+                    class="w-full text-left p-3 rounded-xl bg-slate-900 border border-slate-800 hover:border-indigo-500/50 hover:bg-slate-850 text-xs text-slate-300 transition-all flex items-center justify-between group">
+              <span>${opt}</span>
+              <i class="fa-regular fa-circle text-slate-600 group-hover:text-indigo-400 text-xs"></i>
+            </button>
+          `;
+        });
+
+        html += `
+                </div>
+
+                <!-- Feedback Message -->
+                <div id="feedback-${qIdx}" class="hidden mt-4 p-3 rounded-xl text-xs leading-relaxed">
+                  <!-- Injected dynamically -->
+                </div>
+
+              </div>
+            </div>
+          </div>
+        `;
+      });
+
+      html += `
+        <div class="p-6 glass-card rounded-2xl text-center">
+          <p class="text-xs text-slate-400 mb-3">Completa las 3 preguntas para validar el módulo en tu barra general.</p>
+          <button onclick="checkModuleQuizCompletion()" class="px-6 py-2.5 rounded-xl bg-gradient-to-r from-indigo-600 to-cyan-500 text-white font-bold text-xs shadow-lg shadow-indigo-600/30 hover:opacity-90 transition-all">
+            Confirmar Evaluación del Módulo (+50 XP)
+          </button>
+        </div>
+      </div>`;
+
+      container.innerHTML = html;
+    }
+
+    let currentQuizAnswers = {};
+
+    function handleQuizAnswer(qIdx, optIdx) {
+      const topic = TOPICS_DATA[currentTopicId];
+      const q = topic.quiz[qIdx];
+      currentQuizAnswers[qIdx] = optIdx;
+
+      const isCorrect = optIdx === q.correct;
+      const feedbackEl = document.getElementById(`feedback-${qIdx}`);
+
+      // Reset options style
+      q.options.forEach((_, idx) => {
+        const btn = document.getElementById(`opt-btn-${qIdx}-${idx}`);
+        if (btn) {
+          btn.className = "w-full text-left p-3 rounded-xl bg-slate-900 border border-slate-800 text-xs text-slate-400 transition-all flex items-center justify-between";
+          btn.querySelector('i').className = "fa-regular fa-circle text-slate-600 text-xs";
+        }
+      });
+
+      const selectedBtn = document.getElementById(`opt-btn-${qIdx}-${optIdx}`);
+
+      if (isCorrect) {
+        selectedBtn.className = "w-full text-left p-3 rounded-xl bg-emerald-950/40 border border-emerald-500 text-xs text-emerald-200 transition-all flex items-center justify-between";
+        selectedBtn.querySelector('i').className = "fa-solid fa-circle-check text-emerald-400 text-xs";
+
+        feedbackEl.className = "mt-4 p-3 rounded-xl text-xs leading-relaxed bg-emerald-950/40 border border-emerald-500/40 text-emerald-300 block";
+        feedbackEl.innerHTML = `<strong>¡Correcto!</strong> ${q.feedback}`;
+
+        // Mini confetti on correct
+        try {
+          confetti({
+            particleCount: 25,
+            spread: 50,
+            origin: { y: 0.8 },
+            colors: ['#10b981', '#06b6d4']
+          });
+        } catch (e) { }
+      } else {
+        selectedBtn.className = "w-full text-left p-3 rounded-xl bg-rose-950/40 border border-rose-500 text-xs text-rose-200 transition-all flex items-center justify-between";
+        selectedBtn.querySelector('i').className = "fa-solid fa-circle-xmark text-rose-400 text-xs";
+
+        // Show correct option too
+        const correctBtn = document.getElementById(`opt-btn-${qIdx}-${q.correct}`);
+        if (correctBtn) {
+          correctBtn.className = "w-full text-left p-3 rounded-xl bg-slate-900 border border-emerald-500/50 text-xs text-emerald-300 transition-all flex items-center justify-between";
+          correctBtn.querySelector('i').className = "fa-solid fa-check text-emerald-400 text-xs";
+        }
+
+        feedbackEl.className = "mt-4 p-3 rounded-xl text-xs leading-relaxed bg-rose-950/40 border border-rose-500/40 text-rose-300 block";
+        feedbackEl.innerHTML = `<strong>Respuesta Incorrecta:</strong> La opción adecuada es: <em>"${q.options[q.correct]}"</em>. ${q.feedback}`;
+      }
+    }
+
+    function checkModuleQuizCompletion() {
+      const topic = TOPICS_DATA[currentTopicId];
+      const answeredCount = Object.keys(currentQuizAnswers).length;
+
+      if (answeredCount < topic.quiz.length) {
+        alert("Por favor responde las 3 preguntas antes de registrar la evaluación.");
+        return;
+      }
+
+      let correctCount = 0;
+      topic.quiz.forEach((q, idx) => {
+        if (currentQuizAnswers[idx] === q.correct) correctCount++;
+      });
+
+      const quizKey = `quiz-${currentTopicId}`;
+      if (!appState.completedQuizzes[quizKey]) {
+        appState.completedQuizzes[quizKey] = true;
+        addXP(50, `¡Módulo ${currentTopicId} evaluado con éxito!`);
+      }
+
+      saveState();
+
+      if (correctCount === topic.quiz.length) {
+        try {
+          confetti({
+            particleCount: 100,
+            spread: 90,
+            origin: { y: 0.6 }
+          });
+        } catch (e) { }
+        showToast("¡Puntaje Perfecto!", `Acertaste ${correctCount}/3 preguntas del Módulo ${currentTopicId}.`, "fa-crown");
+      } else {
+        showToast("Evaluación Registrada", `Obtuviste ${correctCount}/3 preguntas correctas. Revisa el feedback formativo.`, "fa-check");
+      }
+
+      const pill = document.getElementById('quiz-status-pill');
+      if (pill) {
+        pill.className = "text-xs font-mono px-3 py-1.5 rounded-xl border bg-emerald-500/20 text-emerald-300 border-emerald-500/40";
+        pill.textContent = "✓ Evaluado (+50 XP)";
+      }
+    }
+
+    /* =====================================================================
+       5. REAL-TIME SEARCH ENGINE (Hick's Law - Instant Concept Discovery)
+       ===================================================================== */
+    function setupSearch() {
+      const desktopInput = document.getElementById('global-search-input');
+      const mobileInput = document.getElementById('mobile-search-input');
+
+      [desktopInput, mobileInput].forEach(inp => {
+        if (!inp) return;
+        inp.addEventListener('input', (e) => {
+          performSearch(e.target.value.trim());
+        });
+        inp.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape') closeSearchModal();
+        });
+      });
+
+      // Keyboard Shortcut (Ctrl+K or /)
+      document.addEventListener('keydown', (e) => {
+        if ((e.ctrlKey && e.key === 'k') || e.key === '/') {
+          if (document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA') {
+            e.preventDefault();
+            const input = document.getElementById('global-search-input');
+            input?.focus();
+          }
+        }
+        if (e.key === 'Escape') {
+          closeSearchModal();
+        }
+      });
+    }
+
+    function performSearch(query) {
+      if (!query || query.length < 2) {
+        closeSearchModal();
+        return;
+      }
+
+      const modal = document.getElementById('search-modal');
+      const resultsContainer = document.getElementById('search-results-list');
+      modal.classList.remove('hidden');
+
+      const q = query.toLowerCase();
+      let matches = [];
+
+      for (let t = 1; t <= 5; t++) {
+        const topic = TOPICS_DATA[t];
+
+        // Match Title
+        if (topic.title.toLowerCase().includes(q) || topic.subtitle.toLowerCase().includes(q)) {
+          matches.push({
+            type: 'Módulo Principal',
+            title: `M${t}. ${topic.title}`,
+            desc: topic.subtitle,
+            topicId: t,
+            view: 'theory'
+          });
+        }
+
+        // Match Glossary
+        topic.glossary.forEach(g => {
+          if (g.es.toLowerCase().includes(q) || g.en.toLowerCase().includes(q) || g.def.toLowerCase().includes(q)) {
+            matches.push({
+              type: `Glosario M${t}`,
+              title: `${g.es} (${g.en})`,
+              desc: g.def,
+              topicId: t,
+              view: 'flashcards'
+            });
+          }
+        });
+      }
+
+      if (matches.length === 0) {
+        resultsContainer.innerHTML = `
+          <div class="py-8 text-center text-slate-500 text-xs">
+            <i class="fa-solid fa-face-frown text-2xl mb-2 text-slate-600 block"></i>
+            No encontramos conceptos que coincidan con "<strong>${query}</strong>".<br>
+            Prueba buscando <em>PESTEL, CAC, MASDA, Holístico</em> o <em>4Ps</em>.
+          </div>
+        `;
+        return;
+      }
+
+      resultsContainer.innerHTML = matches.slice(0, 8).map(m => `
+        <div onclick="jumpToSearchResult(${m.topicId}, '${m.view}')" class="p-3 rounded-xl hover:bg-slate-800/80 cursor-pointer transition-colors group">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-white group-hover:text-cyan-300 transition-colors">${m.title}</span>
+            <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-indigo-500/20 text-indigo-300">${m.type}</span>
+          </div>
+          <p class="text-[11px] text-slate-400 mt-1 line-clamp-2">${m.desc}</p>
+        </div>
+      `).join('');
+    }
+
+    function jumpToSearchResult(topicId, view) {
+      closeSearchModal();
+      switchTopic(topicId);
+      switchSubView(view);
+    }
+
+    function closeSearchModal() {
+      const modal = document.getElementById('search-modal');
+      modal?.classList.add('hidden');
+      const d = document.getElementById('global-search-input');
+      const m = document.getElementById('mobile-search-input');
+      if (d) d.value = '';
+      if (m) m.value = '';
+    }
+
+    /* =====================================================================
+       6. UI HELPERS & MOBILE MENU (Fitts's Law)
+       ===================================================================== */
+    function showToast(title, desc, icon = "fa-star") {
+      const toast = document.getElementById('toast');
+      const titleEl = document.getElementById('toast-title');
+      const descEl = document.getElementById('toast-desc');
+      const iconEl = document.getElementById('toast-icon');
+
+      if (!toast) return;
+
+      titleEl.textContent = title;
+      descEl.textContent = desc;
+      iconEl.innerHTML = `<i class="fa-solid ${icon}"></i>`;
+
+      toast.classList.remove('translate-y-24', 'opacity-0', 'pointer-events-none');
+      setTimeout(() => {
+        toast.classList.add('translate-y-24', 'opacity-0', 'pointer-events-none');
+      }, 3500);
+    }
+
+    function setupMobileMenu() {
+      const openBtn = document.getElementById('mobile-menu-btn');
+      const closeBtn = document.getElementById('close-mobile-menu');
+      const sidebar = document.getElementById('sidebar');
+
+      openBtn?.addEventListener('click', () => {
+        sidebar?.classList.remove('-translate-x-full');
+      });
+
+      closeBtn?.addEventListener('click', () => {
+        sidebar?.classList.add('-translate-x-full');
+      });
+    }
+
+    function closeMobileMenu() {
+      const sidebar = document.getElementById('sidebar');
+      sidebar?.classList.add('-translate-x-full');
+    }
+
+    /* =====================================================================
+       7. INITIALIZATION ON DOM READY
+       ===================================================================== */
+    document.addEventListener('DOMContentLoaded', () => {
+      loadState();
+      switchTopic(1);
+      setupSearch();
+      setupMobileMenu();
+    });
+  </script>
+</body>
+
+</html>
